@@ -1,8 +1,7 @@
 # hybrid_simulation
 
 
-## Videos
+## Video
 
-Human Detection with fusion of laser and camera
-
-[![Human Detection with fusion of laser and camera](http://img.youtube.com/vi/W84ERQ0LYjM/0.jpg)](http://www.youtube.com/watch?v=W84ERQ0LYjM)
+Experiments for the hybrid simulation tool in a merge scenario with very high traffic.
+[![hybrid simulation tool for very high traffic](http://img.youtube.com/vi/W1FOMkaH1Ko/0.jpg)](https://youtu.be/W1FOMkaH1Ko)
