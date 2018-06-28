@@ -1,5 +1,8 @@
-# hybrid_simulation
-
+hybrid_simulation package
+====== 
+ This code presents an open source tool for simulating autonomous vehicles in complex, high traffic, scenarios. 
+ 
+ The hybrid simulation fully integrates and synchronizes SUMO a microscopic, multi-modal traffic simulator and GAZEBO a complex 3D simulator.
 
 ## Video
 
