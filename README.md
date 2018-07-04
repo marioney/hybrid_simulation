@@ -21,7 +21,7 @@ The hybrid simulation tested on the following software
 
 All of them can be installed usin the standard installation process.
 
-#### ROS Dependencies are listed on the package.xml file
+#### The example provided uses as ego-vehicle the Demo of Prius in ROS/GAZEBO provided by the osrf.  It can be found in this link: https://github.com/osrf/car_demo
 
 ## How to compile
 
@@ -34,7 +34,7 @@ The code compiles only using *catkin_make*.
 
  * Run ```roslaunch hybrid_simulation hybrid_simulation.launch```
  * Rviz is going to launch. You can enable the images (cameras)
- * Wait till everything is launched and loaded in Gazebo and start the SUMO simulation: Click the play button in SUMO.
+ * Wait till everything is launched and loaded in Gazebo and start the hybrid simulation by clicking the play button in SUMO.
  
 ## Executables and libraries
 
@@ -65,20 +65,40 @@ The *control_other_vehicles.py* executable is a standalone executable that inter
 
 It is suggested to run the launch files than to run the bin files
 
-* hybrid_simulation.launch - Full simulation 
+* hybrid_simulation.launch  - Main laucher with full simulation
+* spawn_prius.launch        - Spawns the Prius model in Gazebo
+* sumo_interface.launch     - Launches the SUMO simulator and the interface to communicate with gazebo.
 
 
 ## Brief explanation of the package contents
 
-#### scripts
-#### src
-#### sumo_files
-#### launchers
-#### meshes
-#### sdf
-#### worlds
+#### src / sumo_world_plugin.cpp
+Source code for the Gazebo plugin
+#### scripts / control_other_vehicles.py
+Main source for the SUMO control interface
+#### src / hybrid_simulation / ego_vehicle.py
+Source code for the EgoVehicle class: sets the status of ego-vehicle in SUMO with the values from Gazebo
+#### src / hybrid_simulation / route_file.py 
+Source code for the generation of the SUMO route file *network_traci.rou.xml*
+#### src / hybrid_simulation / traci_controls.py 
+Source code for auxiliary classes to control and interface with the simulation.
 
-## Acknowledgements
+#### sumo_files / network.sumocfg
+Simulation and overall configuration file for the SUMO simulation.
+#### sumo_files / network.net.xmlt  
+Description of the scenario, roads, intersections and other elements. It was created using the NETEDIT tool included in the SUMO installation.
+#### sumo_files / network.det.xml
+Definition of a detector to control an intelligent traffic light.
+#### launchers 
+Different lauchers detailed above. 
+#### meshes / Car.dae
+Mesh file for the car model used for all additional vehicles.
+#### sdf / models /car / car_model.sdf
+SDF file for the car model used for all additional vehicles.
+#### worlds / roads.world
+World file, with the scenario and Roads description for Gazebo. Includes the SumoWorldPlugin.
+
+
 
 
 
