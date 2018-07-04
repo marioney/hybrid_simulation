@@ -32,11 +32,11 @@ The code compiles only using *catkin_make*.
 
 ## Demo the code
 
- * Run ```roslaunch hdetect recognizeBag.launch```
- * Rviz is going to launch. Enable the image (camera)
+ * Run ```roslaunch hybrid_simulation hybrid_simulation.launch```
+ * Rviz is going to launch. You can enable the images (cameras)
  * Wait till everything is launched and loaded in Gazebo and start the SUMO simulation: Click the play button in SUMO.
  
- ## Executables and libraries
+## Executables and libraries
 
 This package contains one executable for interfacing with SUMO and one Gazebo plugin.
 
@@ -65,38 +65,21 @@ The *control_other_vehicles.py* executable is a standalone executable that inter
 
 It is suggested to run the launch files than to run the bin files
 
-* headlessRT.launch - headlessRT on robot
-* headlessBag.launch - headlessRT with rosbag. The bag name can be changed inside the launch
-* visualizeRT.launch - visualizeRT on robot.
-* visualizeBag.launch - visualizeRT with rosbag. The bag name can be changed inside the launch
-* recognizeRT.launch - recognizeRT on robot.
-* recognizeBag.launch - recognizeRT with rosbag. The bag name can be changed inside the launch
-* showRT.launch - showRT on robot.
-* showBag.launch - showRT with rosbag. The bag name can be changed inside the launch
-* annotateBAG.launch - annotateData with rosbag. The bag name can be changed inside the launch.
-* trainLaser.launch - trainLaser with csv file. The file name can be changed inside the launch.
+* hybrid_simulation.launch - Full simulation 
+
 
 ## Brief explanation of the package contents
 
-#### lengine
-segment the laser points into clusters, call the function to compute the 17 features of the laser points
+#### scripts
+#### src
+#### sumo_files
+#### launchers
+#### meshes
+#### sdf
+#### worlds
 
-#### lfeature
-compute the 17 features of the laser points
-
-#### lgeometry
-compute the geometry used by the computation of the features
-
-#### laserLib
-load the raw laser point, call the function to compute the clusters and the features
-
-#### projectTools
-standard function for projection, used in everywhere
-
- 
 ## Acknowledgements
 
-The laser processing module uses code swritten by L. Spinello.  The tracking module is based on the work of Gonzalo Rodriguez-Canosa
 
 
 
