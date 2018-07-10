@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<launch>
+
+  ## Launcher arguments
+
+  <!-- Path to world file -->
+  <arg name="world_file" default="$(find hybrid_simulation)/worlds/roads.world"/>
+
+  <!-- Path to ego-vehicle model -->
+  <arg name="ego_vehicle_model" default="$(find prius_description)/urdf/prius.urdf"/>
+  <arg name="ego_vehicle_name" default="prius"/>
+
+  <!-- Ego-vehicle initial pose -->
+  <arg name="init_pos_x" default="225.80"/>
+  <arg name="init_pos_y" default="119.95"/>
+  <arg name="init_pos_z" default="0.5"/>
+  <arg name="init_yaw" default="3.14159"/>
+
+  <!-- Launch RVIZ ? -->
+
+  <arg name="launch_rviz" default="true"/>
+  <arg name="rvizconfig" default="$(find car_demo)/rviz/demo.rviz" />
+
+
+  <!-- Add ego vehicle name to parameter server -->
+  <param name="/ego_vehicle_name" value="$(arg ego_vehicle_name)" />
+  
+
+  ## Launch gazebo and world
+
+  <!-- We use the logic in empty_world.launch, changing only the name of the world to be launched -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(arg world_file)"/>
+    <!-- more default parameters can be changed here -->
+  </include>
+
+
+ ## Spawn ego-vehicle (prius) 
+  <!-- We use the logic in empty_world.launch, changing only the name of the world to be launched -->
+  <include file="$(find hybrid_simulation)/launchers/spawn_prius.launch">
+    <arg name="ego_vehicle_model" value="$(arg ego_vehicle_model)"/>
+    <arg name="ego_vehicle_name" value="$(arg ego_vehicle_name)"/>
+    <arg name="init_pos_x" value="$(arg init_pos_x)"/>
+    <arg name="init_pos_y" value="$(arg init_pos_y)"/>
+    <arg name="init_pos_z" value="$(arg init_pos_z)"/>
+    <arg name="init_yaw" value="$(arg init_yaw)"/>
+  </include>
+
+ ## Launch SUMO and interface
+  <!-- We use the logic in empty_world.launch, changing only the name of the world to be launched -->
+  <include file="$(find hybrid_simulation)/launchers/sumo_interface.launch">
+
+  </include>
+
+  ## Launch rviz
+  <group if="$(arg launch_rviz)">
+	<node pkg="rviz" type="rviz" name="zoe_rviz" args="-d $(arg rvizconfig)"/>
+  </group>
+
+</launch>

@@ -1,0 +1,68 @@
+<?xml version="1.0" ?>
+<sdf version="1.5">
+  <world name="default">
+    <scene>
+      <grid>false</grid>
+    </scene>
+
+    <gui fullscreen='0'>
+      <plugin name='keyboard' filename='libKeyboardGUIPlugin.so'/>
+    </gui>
+
+    <!-- A global light source -->
+    <include>
+      <uri>model://sun</uri>
+    </include>
+    <!-- Invisible ground plane -->
+    <model name="ground">
+      <link name="body">
+        <collision name="geom">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+            </plane>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>100</mu>
+                <mu2>50</mu2>
+              </ode>
+            </friction>
+          </surface>
+        </collision>
+      </link>
+      <static>true</static>
+    </model>
+    <road name="D1">
+      <width>6.6</width>
+      <point>-20 103.3 0</point>
+      <point>65 103.3 0</point>
+    </road>
+    <road name="L11">
+      <width>9.9</width>
+      <point>65 104.95 0</point>
+      <point>100 104.95 0</point>
+    </road>
+    <road name="L9">
+      <width>6.6</width>
+      <point>80 103.3 0</point>
+      <point>200 103.3 0</point>
+    </road>
+    <road name="L6">
+      <width>6.6</width>
+      <point>125 118.3 0</point>
+      <point>230 118.3 0</point>
+    </road>
+    <road name="L17">
+      <width>3.3</width>
+      <point>125 116.65 0</point>
+      <point>100 108.55 0</point>
+    </road>
+    <!-- Load the plugin for the sumo positions -->
+    <plugin name="SumoUpdate" filename="libSumoWorldPlugin.so">
+        <ego_vehicle_model_name>prius</ego_vehicle_model_name>
+    </plugin>
+
+  </world>
+</sdf>

@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<launch>
+
+  ## Launcher arguments
+
+  <!-- Path to world file -->
+  <arg name="world_file" default="$(find sumo_gazebo)/worlds/roads.world"/>
+
+  <!-- Path to ego-vehicle model -->
+  <arg name="ego_vehicle_model" default="$(find prius_description)/urdf/prius.urdf"/>
+  <arg name="ego_vehicle_name" default="prius"/>
+
+  <!-- Ego-vehicle initial pose -->
+  <arg name="init_pos_x" default="225.80"/>
+  <arg name="init_pos_y" default="119.95"/>
+  <arg name="init_pos_z" default="0.5"/>
+  <arg name="init_yaw" default="3.14159"/>
+
+  <!-- Launch RVIZ ? -->
+
+  <arg name="launch_rviz" default="true"/>
+  <arg name="rvizconfig" default="$(find car_demo)/rviz/demo.rviz" />
+
+
+  <!-- Add ego vehicle name to parameter server -->
+  <param name="/ego_vehicle_name" value="$(arg ego_vehicle_name)" />
+  
+
+  ## Launch gazebo and world
+
+  <!-- We use the logic in empty_world.launch, changing only the name of the world to be launched -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(arg world_file)"/>
+    <!-- more default parameters can be changed here -->
+  </include>
+
+
+  ## Spawn ego-vehicle model
+  ## This is the example works well for the prius car_demo, but it may need many changes for different models.
+
+  <!-- Load vehicle description on parameter server -->
+  <param name="robot_description" textfile="$(arg ego_vehicle_model)"/>
+
+  <!-- Spawn ego-vehicle model -->
+  <node name="spawn_ego_vehicle_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf 
+										-param robot_description
+										-x $(arg init_pos_x)
+										-y $(arg init_pos_y)
+										-z $(arg init_pos_z)
+										-Y $(arg init_yaw)
+										-model $(arg ego_vehicle_name)" />
+
+  <!-- State publisher -->
+  <node pkg="robot_state_publisher" type="robot_state_publisher" name="ego_vehicle_state_publisher" >
+    <!-- <remap from="robot_description" to="different_robot_description" /> -->
+    <!-- <remap from="joint_states" to="/prius/joint_states" /> -->
+  </node>
+  <!-- Fake localization -->
+  <node pkg="fake_localization" type="fake_localization" name="fake_localization">
+    <!-- <remap from="base_pose_ground_truth" to="/prius/base_pose_ground_truth"/> -->
+  </node>
+
+  <node pkg="tf2_ros" type="static_transform_publisher" name="very_inaccurate_odom" args="0 0 0 0 0 0 odom base_link"/>
+
+  <!-- Joystick driver -->
+  <node pkg="joy" type="joy_node" name="joy_node0">
+    <param name="dev" value="/dev/input/js0"/>
+  </node>
+ 
+  <!-- Joystick Translator --> 
+  <node pkg="car_demo" type="joystick_translator" name="joystick_translator"/>
+
+
+
+  ## Launch rviz
+  <group if="$(arg launch_rviz)">
+	<node pkg="rviz" type="rviz" name="zoe_rviz" args="-d $(arg rvizconfig)"/>
+  </group>
+
+</launch>
