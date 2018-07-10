@@ -47,7 +47,7 @@
   </include>
 
  ## Launch SUMO and interface
-  <!-- We use the logic in empty_world.launch, changing only the name of the world to be launched -->
+  <!-- The interface launches the SUMO simulator, play button needs to be manually click -->
   <include file="$(find hybrid_simulation)/launchers/sumo_interface.launch">
 
   </include>

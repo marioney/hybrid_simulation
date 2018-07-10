@@ -20,6 +20,9 @@ find_package(catkin REQUIRED COMPONENTS
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 
+# Depends on system install of Gazebo
+find_package(gazebo REQUIRED)
+
 
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
@@ -109,7 +112,7 @@ catkin_python_setup()
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES hybrid_simulation
-#  CATKIN_DEPENDS gazebo_ros geometry_msgs nav_msgs roscpp rospy tf
+   CATKIN_DEPENDS gazebo_ros geometry_msgs nav_msgs roscpp rospy tf
 #  DEPENDS system_lib
 )
 
@@ -120,14 +123,24 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-# include
+  include
   ${catkin_INCLUDE_DIRS}
+  ${GAZEBO_INCLUDE_DIRS}  
 )
+
+
+
+link_directories(${GAZEBO_LIBRARY_DIRS})
+
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
 #   src/${PROJECT_NAME}/hybrid_simulation.cpp
 # )
+
+
+add_library(SumoWorldPlugin src/sumo_world_plugin.cpp)
+
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
@@ -153,6 +166,8 @@ include_directories(
 # target_link_libraries(${PROJECT_NAME}_node
 #   ${catkin_LIBRARIES}
 # )
+
+target_link_libraries(SumoWorldPlugin ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
 
 #############
 ## Install ##

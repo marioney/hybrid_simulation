@@ -124,7 +124,8 @@ def run(event):
                 subs = traci.vehicle.getSubscriptionResults(v)
                 move_nodes.append((v, subs[tc.VAR_ROAD_ID], subs[tc.VAR_LANEPOSITION]))
                 if use_gazebo is True:
-                    gazebo_synchro(subs, v)
+					gazebo_synchro(subs, v)
+					
             if use_gazebo is True:
                 arrived = traci.simulation.getArrivedIDList()
                 if arrived is not None:
@@ -179,7 +180,7 @@ def gazebo_synchro(subs, vehicle_id):
             ego_vehicle.init_ego_car_control()
     else:
         rospack1 = rospkg.RosPack()
-        package_path = rospack1.get_path('sumo_gazebo')
+        package_path = rospack1.get_path('hybrid_simulation')
         file_xml = open(package_path + "/sdf/models/car/car_model.sdf")
         xml_string = file_xml.read()
         rospy.loginfo("Spawning model: %s", vehicle_id)
@@ -200,9 +201,9 @@ def gazebo_synchro(subs, vehicle_id):
                                     orientation[3])
                          )
         try:
-            spawn_model(vehicle_id, xml_string, "", item_pose, "world")
-        except rospy.ServiceException as e:
-            rospy.logerr("Error in spawn %s -  %s", vehicle_id, e.message)
+		spawn_model(vehicle_id, xml_string, "", item_pose, "world")
+	except rospy.ServiceException as e:
+		rospy.logerr("Error in spawn %s -  %s", vehicle_id, e.message)
 
 
 def get_options():
@@ -246,7 +247,7 @@ if __name__ == "__main__":
     p_ns = 10. / 60
 
     rospack = rospkg.RosPack()
-    route_file_path = rospack.get_path('control_ego_vehicle') + "/sumo_files/network_traci.rou.xml"
+    route_file_path = rospack.get_path('hybrid_simulation') + "/sumo_files/network_traci.rou.xml"
 
     # route_file_path = "../sumo_files/network_traci.rou.xml"
     max_steps = 200
@@ -254,7 +255,7 @@ if __name__ == "__main__":
 
     # this is the normal way of using traci. sumo is started as a
     # # subprocess and then the python script connects and runs
-    traci.start([sumoBinary, "-c", rospack.get_path('control_ego_vehicle') + "/sumo_files/network.sumocfg",
+    traci.start([sumoBinary, "-c", rospack.get_path('hybrid_simulation') + "/sumo_files/network.sumocfg",
                  "--collision.action", "none"], label="sim_sumo")
     traci.simulation.subscribe()
 
@@ -269,6 +270,8 @@ if __name__ == "__main__":
 
     rospy.Timer(rospy.Duration.from_sec(0.05), publish_tf_timer_callback)
     rospy.Timer(rospy.Duration.from_sec(0.05), run)
+    rospy.loginfo("SUMO Interface -- Starting spinner")
+
     rospy.spin()
 
     traci.close()

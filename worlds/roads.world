@@ -6,7 +6,12 @@
     </scene>
 
     <gui fullscreen='0'>
-      <plugin name='keyboard' filename='libKeyboardGUIPlugin.so'/>
+      <plugin name='keyboard' filename='libKeyboardGUIPlugin.so'/>          
+      <camera name='user_camera'>
+        <pose frame=''>45.6046 53.9823 37.9042 0 0.395643 0.752194</pose>
+        <view_controller>orbit</view_controller>
+        <projection_type>perspective</projection_type>
+      </camera>
     </gui>
 
     <!-- A global light source -->

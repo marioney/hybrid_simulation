@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<launch>
+
+ ## Launch SUMO and interface
+  <!-- The interface launches the SUMO simulator, play button needs to be manually click -->
+  <node pkg="hybrid_simulation" type="control_other_vehicles.py" name="sumo_interface" output="screen">
+	 <param name="use_gazebo" value="True" />
+	 <param name="control_ego_vehicle" value="True" />	     
+  </node>
+
+</launch>
