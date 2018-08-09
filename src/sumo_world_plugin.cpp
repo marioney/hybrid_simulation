@@ -61,6 +61,11 @@ namespace gazebo
             {
                 continue;
             }
+            if (frame_id == "grass_plane")
+            {
+                continue;
+            }
+
 
             try
             {

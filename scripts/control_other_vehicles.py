@@ -32,6 +32,8 @@ except ImportError:
 from hybrid_simulation.route_file import *
 from hybrid_simulation.traci_controls import *
 from hybrid_simulation.ego_vehicle import *
+from hybrid_simulation.msg import VehicleStatus, VehicleStatusArray
+
 import traci.constants as tc
 
 
@@ -50,6 +52,7 @@ def ros_initialization():
     global spawn_model
     global use_gazebo
     global control_ego_vehicle
+    global vehicle_status_pub
 
     rospy.init_node('sumo_interface', anonymous=True)
     use_gazebo = rospy.get_param('~use_gazebo', True)
@@ -60,13 +63,19 @@ def ros_initialization():
         rospy.wait_for_service("/gazebo/spawn_sdf_model")
         delete_model = rospy.ServiceProxy("/gazebo/delete_model", DeleteModel)
         spawn_model = rospy.ServiceProxy("/gazebo/spawn_sdf_model", SpawnModel)
+    vehicle_status_pub = rospy.Publisher('vehilces_status', VehicleStatusArray, queue_size=1)
 
 
 def publish_tf_timer_callback(event):
 
     # rospy.loginfo("Timer called at %s", str(event.current_real))
+    global vehicle_status_pub
 
     br = tf.TransformBroadcaster()
+    vehices_msg_array = VehicleStatusArray()
+    vehices_msg_array.header.stamp = rospy.Time.now()
+    vehices_msg_array.header.frame_id = "world"
+
     for running_vehicle, subs in traci.vehicle.getSubscriptionResults().items():
         if running_vehicle is not None:
             try:
@@ -79,6 +88,11 @@ def publish_tf_timer_callback(event):
                 # print(result_sub)
                 v_position = result_sub.get(tc.VAR_POSITION, None)
                 v_angle = result_sub.get(tc.VAR_ANGLE, None)
+                v_max_vel = result_sub.get(tc.VAR_MAXSPEED, None)
+                v_velocity = result_sub.get(tc.VAR_SPEED, None)
+                v_lane_id = result_sub.get(tc.VAR_LANE_INDEX, None)
+                v_signals = result_sub.get(tc.VAR_SIGNALS, None)
+
                 if v_angle is not None and v_position is not None:
                     v_angle = 360 - v_angle
                     # rospy.loginfo("Vehicle %s - Pos_x: %.2f Pos_y: %.2f Angle: %.2f rads: %.2f",
@@ -88,6 +102,18 @@ def publish_tf_timer_callback(event):
                                      rospy.Time.now(),
                                      running_vehicle,
                                      "world")
+                    vehicle_msg = VehicleStatus()
+                    vehicle_msg.vehicle_id = running_vehicle
+                    vehicle_msg.pos_x = v_position[0]
+                    vehicle_msg.pos_y = v_position[1]
+                    vehicle_msg.heading = radians(v_angle)
+                    vehicle_msg.velocity = v_velocity
+                    vehicle_msg.max_vel = v_max_vel
+                    vehicle_msg.lane = v_lane_id
+                    vehicle_msg.signals = v_signals
+                    vehices_msg_array.VehiclesDetected.append(vehicle_msg)
+
+    vehicle_status_pub.publish(vehices_msg_array)
 
 
 def run(event):
@@ -120,7 +146,9 @@ def run(event):
         if departed is not None:
             # print("step", traci_controller.setting.step, " departed >", departed)
             for v in departed:
-                traci.vehicle.subscribe(v, [tc.VAR_POSITION, tc.VAR_ANGLE, tc.VAR_ROAD_ID, tc.VAR_LANEPOSITION])
+                traci.vehicle.subscribe(v, [tc.VAR_POSITION, tc.VAR_ANGLE, tc.VAR_ROAD_ID,
+                                            tc.VAR_LANEPOSITION, tc.VAR_MAXSPEED,
+                                            tc.VAR_SPEED, tc.VAR_LANE_INDEX, tc.VAR_SIGNALS])
                 subs = traci.vehicle.getSubscriptionResults(v)
                 move_nodes.append((v, subs[tc.VAR_ROAD_ID], subs[tc.VAR_LANEPOSITION]))
                 if use_gazebo is True:

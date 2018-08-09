@@ -7,9 +7,12 @@
 # velocity : Linear velocity of the vehicle
 # max_vel : Maximum velocity
 
-int16   vehicle_id
+string  vehicle_id
 float32 pos_x
 float32 pos_y
 float32 heading
 float32 velocity
 float32 max_vel
+int16 lane
+int16 signals
+
