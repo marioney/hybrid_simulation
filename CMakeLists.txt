@@ -10,6 +10,7 @@ project(hybrid_simulation)
 find_package(catkin REQUIRED COMPONENTS
   gazebo_ros
   geometry_msgs
+  std_msgs
   nav_msgs
   roscpp
   rospy
@@ -54,11 +55,11 @@ catkin_python_setup()
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-# add_message_files(
-#   FILES
-#   Message1.msg
-#   Message2.msg
-# )
+add_message_files(
+   FILES
+   VehicleStatus.msg
+   VehicleStatusArray.msg
+ )
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -75,10 +76,10 @@ catkin_python_setup()
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   geometry_msgs#   nav_msgs
-# )
+generate_messages(
+   DEPENDENCIES
+   std_msgs #   nav_msgs
+)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -112,7 +113,7 @@ catkin_python_setup()
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES hybrid_simulation
-   CATKIN_DEPENDS gazebo_ros geometry_msgs nav_msgs roscpp rospy tf
+   CATKIN_DEPENDS gazebo_ros std_msgs geometry_msgs nav_msgs roscpp rospy tf
 #  DEPENDS system_lib
 )
 

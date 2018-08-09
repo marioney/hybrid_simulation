@@ -4,27 +4,31 @@
   ## Launcher arguments
 
   <!-- Path to world file -->
-  <arg name="world_file" default="$(find hybrid_simulation)/worlds/roads.world"/>
+  <arg name="world_file" default="$(find hybrid_simulation)/worlds/dmaking.world"/>
 
   <!-- Path to ego-vehicle model -->
   <arg name="ego_vehicle_model" default="$(find prius_description)/urdf/prius.urdf"/>
   <arg name="ego_vehicle_name" default="prius"/>
 
   <!-- Ego-vehicle initial pose -->
-  <arg name="init_pos_x" default="225.80"/>
-  <arg name="init_pos_y" default="119.95"/>
+  <arg name="init_pos_x" default="196.80"/>
+  <arg name="init_pos_y" default="104.95"/>
   <arg name="init_pos_z" default="0.5"/>
   <arg name="init_yaw" default="3.14159"/>
+
+  <arg name="use_gazebo" default="True"/>
+  <arg name="control_ego_vehicle" default="True"/>
+  <arg name="route_file_name" default="dmaking.rou.xml"/>
+  <arg name="sumo_config_file_name" default="dmaking.sumocfg"/>
+
+  <arg name="scenario_nr" default="1"/>
+
 
   <!-- Launch RVIZ ? -->
 
   <arg name="launch_rviz" default="true"/>
   <arg name="rvizconfig" default="$(find car_demo)/rviz/demo.rviz" />
 
-
-  <!-- Add ego vehicle name to parameter server
-  <param name="/ego_vehicle_name" value="$(arg ego_vehicle_name)" />
-  -->
 
   ## Launch gazebo and world
 
@@ -50,6 +54,13 @@
   <!-- The interface launches the SUMO simulator, play button needs to be manually click -->
   <include file="$(find hybrid_simulation)/launchers/sumo_interface.launch">
       <arg name="ego_vehicle_name" value="$(arg ego_vehicle_name)"/>
+      <arg name="use_gazebo" value="$(arg use_gazebo)"/>
+      <arg name="control_ego_vehicle" value="$(arg control_ego_vehicle)"/>
+      <arg name="route_file_name" value="$(arg route_file_name)"/>
+      <arg name="sumo_config_file_name" value="$(arg sumo_config_file_name)"/>
+      <arg name="scenario_nr" value="$(arg scenario_nr)"/>
+
+
   </include>
 
   ## Launch rviz

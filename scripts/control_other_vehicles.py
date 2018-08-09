@@ -51,9 +51,9 @@ def ros_initialization():
     global use_gazebo
     global control_ego_vehicle
 
-    rospy.init_node('listener', anonymous=True)
-    use_gazebo = rospy.get_param('use_gazebo', True)
-    control_ego_vehicle = rospy.get_param('control_ego_vehicle', True)
+    rospy.init_node('sumo_interface', anonymous=True)
+    use_gazebo = rospy.get_param('~use_gazebo', True)
+    control_ego_vehicle = rospy.get_param('~control_ego_vehicle', True)
     if use_gazebo is True:
         rospy.loginfo("Waiting for gazebo services...")
         rospy.wait_for_service("/gazebo/delete_model")
@@ -151,15 +151,15 @@ def run(event):
                 print("vehicle ID", vehicle_id, "Arrived - ")
                 traci_controller.restart(vehicle_id, "D1")
 
-        if traci.trafficlight.getPhase("911") == 2:
-            # we are not already switching
-            n_cars = traci.inductionloop.getLastStepVehicleNumber("det0")
-            if n_cars > 0:
-                # there is a vehicle from the north, switch
-                traci.trafficlight.setPhase("911", 3)
-            else:
-                # otherwise try to keep green for EW
-                traci.trafficlight.setPhase("911", 2)
+        # if traci.trafficlight.getPhase("911") == 2:
+        #     # we are not already switching
+        #     n_cars = traci.inductionloop.getLastStepVehicleNumber("det0")
+        #     if n_cars > 0:
+        #         # there is a vehicle from the north, switch
+        #         traci.trafficlight.setPhase("911", 3)
+        #     else:
+        #         # otherwise try to keep green for EW
+        #         traci.trafficlight.setPhase("911", 2)
         traci_controller.setting.step += 1
 
 
@@ -168,8 +168,8 @@ def gazebo_synchro(subs, vehicle_id):
     global spawn_model
     global ego_vehicle
 
-    if rospy.has_param("/ego_vehicle_name"):
-        ego_vehicle_id = rospy.get_param("/ego_vehicle_name")
+    if rospy.has_param("ego_vehicle_name"):
+        ego_vehicle_id = rospy.get_param("ego_vehicle_name")
     else:
         ego_vehicle_id = "prius"
 
@@ -237,32 +237,53 @@ if __name__ == "__main__":
 
     # first, generate the route file for this simulation
 
+
+
+    rospack = rospkg.RosPack()
+    if rospy.has_param('~route_file_name'):
+        route_file_name = rospy.get_param('~route_file_name')
+    else:
+        rospy.loginfo("SUMO Interface -- Using default route file")
+        route_file_name = "network_traci.rou.xml"
+    route_file_path = rospack.get_path('hybrid_simulation') + "/sumo_files/" + route_file_name
+
     #  demand per second from different directions
     # p_we = 40. / 60
     # p_ew = 15. / 60
     # p_ns = 10. / 60
     #
-    p_we = 50. / 60
-    p_ew = 20. / 60
-    p_ns = 10. / 60
 
-    rospack = rospkg.RosPack()
-    route_file_path = rospack.get_path('hybrid_simulation') + "/sumo_files/network_traci.rou.xml"
+    if rospy.has_param('~n_scenario'):
+        n_scenario = rospy.get_param('~n_scenario')
+    else:
+        rospy.loginfo("SUMO Interface -- Using default scenario number")
+        n_scenario = 0
 
-    # route_file_path = "../sumo_files/network_traci.rou.xml"
-    max_steps = 200
-    generate_route_file(route_file_path, max_steps, p_we, p_ew, p_ns)
+    if n_scenario == 0:
+        p_we = 50. / 60
+        p_ew = 0. / 60
+        p_ns = 0. / 60
+        max_steps = 200
+        generate_route_file(route_file_path, max_steps, p_we, p_ew, p_ns)
+    else:
+        generate_route_file_dmaking(route_file_path, n_scenario)
 
     # this is the normal way of using traci. sumo is started as a
     # # subprocess and then the python script connects and runs
-    traci.start([sumoBinary, "-c", rospack.get_path('hybrid_simulation') + "/sumo_files/network.sumocfg",
+    if rospy.has_param('~sumo_config_file_name'):
+        sumo_config_file_name = rospy.get_param('~sumo_config_file_name')
+    else:
+        rospy.loginfo("SUMO Interface -- Using default sumo config file")
+        sumo_config_file_name = "network.sumocfg"
+    sumo_config_file_path = rospack.get_path('hybrid_simulation') + "/sumo_files/" + sumo_config_file_name
+    traci.start([sumoBinary, "-c", sumo_config_file_path,
                  "--collision.action", "none"], label="sim_sumo")
     traci.simulation.subscribe()
 
     traci_controller.setting.step = 0
 
     # we start with phase 2 where EW has green
-    traci.trafficlight.setPhase("911", 2)
+    #traci.trafficlight.setPhase("911", 2)
 
     global ego_vehicle
 

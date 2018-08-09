@@ -65,3 +65,59 @@ def generate_route_file(route_file_path, max_steps, p_we, p_ew, p_ns):
                     veh_nr += 1
 
         print("</routes>", file=routes)
+
+
+def generate_route_file_dmaking(route_file_path, n_scenario):
+    """
+    Generates and stores the route file. (.rou.xml)
+
+    :route_file_path: Absolute path to the file
+    :max_steps: Maximum number of steps
+    :p_we: Probability of having a car in the we init point
+    :p_ew: Probability of having a car in the ew init point
+    :p_ns: Probability of having a car in the ns init point
+    """
+
+    random.seed(42)  # make tests reproducible
+
+    with open(route_file_path, "w") as routes:
+
+        print("""<routes>
+
+        <vType accel="2.0" decel="6.0" id="Car_130" length="5.0" minGap="2.5" maxSpeed="13.0" sigma="0.9"
+        lcStrategic="0.0" lcSpeedGain="0.9" lcKeepRight="100.01" />
+        <vType accel="2.0" decel="6.0" id="Car_100" length="5.0" minGap="2.5" maxSpeed="10.0" sigma="0.9"
+        lcStrategic="0.0" lcSpeedGain="0.9" lcKeepRight="100.01" />
+        <vType accel="2.0" decel="6.0" id="Car_80" length="5.0" minGap="2.5" maxSpeed="8.0" sigma="0.9"
+        lcStrategic="0.0" lcSpeedGain="0.9" lcKeepRight="100.01" />
+        <vType accel="2.0" decel="6.0" id="Car_70" length="5.0" minGap="2.5" maxSpeed="7.0" sigma="0.9"
+        lcStrategic="0.0" lcSpeedGain="0.9" lcKeepRight="100.01" />
+        <vType accel="2.0" decel="6.0" id="ego-vehicle" length="4.1" minGap="2.0" maxSpeed="13.0" sigma="0.9"
+        lcStrategic="0.0" lcSpeedGain="0.9" lcKeepRight="100.01"/>
+        <route id="route01" edges="D8 L8 L9 L11 L1 D1"/>
+        <route id="route02" edges="L8 L9 L11 L1 D1"/>
+        <route id="route03" edges="L9 L11 L1 D1"/>
+        <route id="route04" edges="L11 L1 D1"/>
+        <route id="route05" edges="L1 D1"/> """, file=routes)
+
+        if has_param('~ego_vehicle_name'):
+            ego_vehicle_id = get_param('~ego_vehicle_name')
+        else:
+            ego_vehicle_id = "prius"
+        print('    <vehicle id="%s" type="ego-vehicle" route="route01" depart="3" color="1,1,1"/>'
+              % ego_vehicle_id, file=routes)
+
+        if n_scenario == 1:
+            print('    <vehicle id="car_80" type="Car_80" route="route03" depart="10" />', file=routes)
+
+        if n_scenario == 2:
+            print('    <vehicle id="car_70" type="Car_70" route="route05" depart="10" />', file=routes)
+            print('    <vehicle id="car_100" type="Car_100" route="route03" depart="10" />', file=routes)
+
+        if n_scenario == 3:
+            print('    <vehicle id="car_70" type="Car_80" route="route05" depart="10" />', file=routes)
+            print('    <vehicle id="car_100" type="Car_130" route="route02" depart="10" />', file=routes)
+
+        print("</routes>", file=routes)
+
+

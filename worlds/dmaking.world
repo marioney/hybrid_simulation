@@ -1,0 +1,54 @@
+<?xml version="1.0" ?>
+<sdf version="1.5">
+  <world name="default">
+    <scene>
+      <grid>false</grid>
+    </scene>
+
+    <gui fullscreen='0'>
+      <camera name='user_camera'>
+        <pose frame=''>45.6046 53.9823 37.9042 0 0.395643 0.752194</pose>
+        <view_controller>orbit</view_controller>
+        <projection_type>perspective</projection_type>
+      </camera>
+    </gui>
+
+    <!-- A global light source -->
+    <include>
+      <uri>model://sun</uri>
+    </include>
+    <!-- Invisible ground plane -->
+    <model name="ground">
+      <link name="body">
+        <collision name="geom">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+            </plane>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>100</mu>
+                <mu2>50</mu2>
+              </ode>
+            </friction>
+          </surface>
+        </collision>
+      </link>
+      <static>true</static>
+    </model>
+    <include>
+      <uri>model://grass_plane</uri>
+    </include>
+    <road name="D1">
+      <width>6.6</width>
+      <point>-600 103.3 0</point>
+      <point>200 103.3 0</point>
+    </road>
+    <plugin name="SumoUpdate" filename="libSumoWorldPlugin.so">
+        <ego_vehicle_model_name>prius</ego_vehicle_model_name>
+    </plugin>
+
+  </world>
+</sdf>
