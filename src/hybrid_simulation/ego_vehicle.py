@@ -9,14 +9,11 @@ PI = 3.1415926535897
 
 class EgoVehicle:
 
-    def __init__(self, pos_x=0, pos_y=0, yaw=0):
+    def __init__(self, ego_vehicle_id, pos_x=0, pos_y=0, yaw=0):
         self.pos_x = pos_x
         self.pos_y = pos_y
         self.angle = yaw
-        if rospy.has_param("/ego_vehicle_name"):
-            ego_vehicle_id = rospy.get_param("/ego_vehicle_name")
-        else:
-            ego_vehicle_id = "prius"
+
         self.ego_vehicle_id = ego_vehicle_id
         rospy.wait_for_service("/gazebo/get_model_state")
         self.model_state_srv = rospy.ServiceProxy("/gazebo/get_model_state", GetModelState)
@@ -24,7 +21,6 @@ class EgoVehicle:
 
     def read_position_from_gazebo(self):
 
-        # rospy.loginfo("Timer called at %s", str(event.current_real))
         try:
             gazebo_coordinates = self.model_state_srv(self.ego_vehicle_id, "")
         except rospy.ServiceException as e:
@@ -32,7 +28,6 @@ class EgoVehicle:
             gazebo_coordinates = None
 
         if gazebo_coordinates is not None:
-            # print(gazebo_coordinates)
             # self.yaw = zoe_tf.transform protation.
             roll, pitch, yaw = transformations.euler_from_quaternion([gazebo_coordinates.pose.orientation.x,
                                                                       gazebo_coordinates.pose.orientation.y,

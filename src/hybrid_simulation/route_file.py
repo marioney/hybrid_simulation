@@ -104,19 +104,19 @@ def generate_route_file_dmaking(route_file_path, n_scenario):
             ego_vehicle_id = get_param('~ego_vehicle_name')
         else:
             ego_vehicle_id = "prius"
-        print('    <vehicle id="%s" type="ego-vehicle" route="route01" depart="3" color="1,1,1"/>'
+        print('    <vehicle id="%s" type="ego-vehicle" route="route01" depart="1" color="1,1,1"/>'
               % ego_vehicle_id, file=routes)
 
         if n_scenario == 1:
-            print('    <vehicle id="car_80" type="Car_80" route="route03" depart="10" />', file=routes)
+            print('    <vehicle id="car_80" type="Car_80" route="route03" depart="5" />', file=routes)
 
         if n_scenario == 2:
-            print('    <vehicle id="car_70" type="Car_70" route="route05" depart="10" />', file=routes)
-            print('    <vehicle id="car_100" type="Car_100" route="route03" depart="10" />', file=routes)
+            print('    <vehicle id="car_70" type="Car_70" route="route05" depart="5" />', file=routes)
+            print('    <vehicle id="car_100" type="Car_100" route="route03" depart="5" />', file=routes)
 
         if n_scenario == 3:
-            print('    <vehicle id="car_70" type="Car_80" route="route05" depart="10" />', file=routes)
-            print('    <vehicle id="car_100" type="Car_130" route="route02" depart="10" />', file=routes)
+            print('    <vehicle id="car_70" type="Car_80" route="route05" depart="5" />', file=routes)
+            print('    <vehicle id="car_100" type="Car_130" route="route02" depart="5" />', file=routes)
 
         print("</routes>", file=routes)
 
