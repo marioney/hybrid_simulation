@@ -18,6 +18,7 @@
 
   <arg name="use_gazebo" default="True"/>
   <arg name="control_ego_vehicle" default="True"/>
+  <arg name="control_from_gazebo" default="False"/>
   <arg name="route_file_name" default="dmaking.rou.xml"/>
   <arg name="sumo_config_file_name" default="dmaking.sumocfg"/>
 
@@ -26,7 +27,7 @@
 
   <!-- Launch RVIZ ? -->
 
-  <arg name="launch_rviz" default="true"/>
+  <arg name="launch_rviz" default="false"/>
   <arg name="rvizconfig" default="$(find car_demo)/rviz/demo.rviz" />
 
 
@@ -56,6 +57,7 @@
       <arg name="ego_vehicle_name" value="$(arg ego_vehicle_name)"/>
       <arg name="use_gazebo" value="$(arg use_gazebo)"/>
       <arg name="control_ego_vehicle" value="$(arg control_ego_vehicle)"/>
+      <arg name="control_from_gazebo" value="$(arg control_from_gazebo)"/>
       <arg name="route_file_name" value="$(arg route_file_name)"/>
       <arg name="sumo_config_file_name" value="$(arg sumo_config_file_name)"/>
       <arg name="scenario_nr" value="$(arg scenario_nr)"/>

@@ -58,7 +58,8 @@ catkin_python_setup()
 add_message_files(
    FILES
    VehicleStatus.msg
-   ControlVehicle.msg
+   ChangeLane.msg
+   SetSpeed.msg
    VehicleStatusArray.msg
  )
 

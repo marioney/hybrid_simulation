@@ -52,6 +52,8 @@ def publish_tf_timer_callback(event):
 
     # rospy.loginfo("Timer called at %s", str(event.current_real))
 
+    global ego_vehicle
+
     br = tf.TransformBroadcaster()
     vehicles_msg_array = VehicleStatusArray()
     vehicles_msg_array.header.stamp = rospy.Time.now()
@@ -93,7 +95,12 @@ def publish_tf_timer_callback(event):
                     vehicle_msg.lane = v_lane_id
                     vehicle_msg.signals = v_signals
                     vehicles_msg_array.VehiclesDetected.append(vehicle_msg)
-
+                    if running_vehicle == ego_vehicle.ego_vehicle_id:
+                        # rospy.loginfo("Control egovehicle")
+                        if ros_node_comp.use_gazebo is True:
+                            # rospy.loginfo("Use Gazebo True")
+                            if ros_node_comp.control_from_gazebo is False:
+                                ego_vehicle.set_position_in_gazebo(vehicle_msg)
     ros_node_comp.vehicle_status_pub.publish(vehicles_msg_array)
 
 
@@ -113,8 +120,8 @@ def run(event):
             if ego_vehicle is not None:
                 # rospy.loginfo("Egovehicle not none")
                 if ros_node_comp.use_gazebo is True:
-                    # rospy.loginfo("Use Gazebo True")
-                    ego_vehicle.read_position_from_gazebo()
+                    if ros_node_comp.control_from_gazebo is True:
+                        ego_vehicle.read_position_from_gazebo()
 
         move_nodes = []
         for veh, subs in traci.vehicle.getSubscriptionResults().items():
@@ -180,7 +187,7 @@ def gazebo_synchro(subs, vehicle_id):
         if ros_node_comp.control_ego_vehicle is True:
             rospy.loginfo("Starting control of %s (ego-vehicle)", vehicle_id)
             ego_vehicle = EgoVehicle(ros_node_comp.ego_vehicle_id)
-            ego_vehicle.init_ego_car_control()
+            ego_vehicle.init_ego_car_control(ros_node_comp.control_from_gazebo)
     else:
         rospack1 = RosPack()
         package_path = rospack1.get_path('hybrid_simulation')
