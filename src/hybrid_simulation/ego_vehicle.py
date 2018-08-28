@@ -6,7 +6,6 @@ from math import degrees, fabs, cos, sin
 from gazebo_msgs.srv import GetModelState
 from gazebo_msgs.srv import SetModelState
 from gazebo_msgs.msg import ModelState
-from hybrid_simulation.msg import VehicleStatus
 
 
 PI = 3.1415926535897
@@ -24,9 +23,6 @@ class EgoVehicle:
         self.get_model_state_srv = rospy.ServiceProxy("/gazebo/get_model_state", GetModelState)
         self.set_model_state_srv = rospy.ServiceProxy("/gazebo/set_model_state", SetModelState)
         self.vehicle_control_sub = rospy.Subscriber('vehicle_change_lane', ChangeLane, self.change_lane_callback)
-        self.change_lane_msg = ChangeLane()
-        self.change_lane_msg.lane_change = 0
-        # rospy.Timer(rospy.Duration.from_sec(1), self.read_position_from_gazebo)
 
     def read_position_from_gazebo(self):
 
@@ -37,7 +33,6 @@ class EgoVehicle:
             gazebo_coordinates = None
 
         if gazebo_coordinates is not None:
-            # self.yaw = zoe_tf.transform protation.
             roll, pitch, yaw = transformations.euler_from_quaternion([gazebo_coordinates.pose.orientation.x,
                                                                       gazebo_coordinates.pose.orientation.y,
                                                                       gazebo_coordinates.pose.orientation.z,
@@ -50,7 +45,6 @@ class EgoVehicle:
             rotate_2 = transformations.quaternion_from_euler(0, 0, 2*PI-yaw)
 
             angle_rotated = transformations.quaternion_multiply(rotate_2, rotate)
-            # print(angle_rotated)
             roll_r, pitch_r, yaw_r = transformations.euler_from_quaternion(angle_rotated)
 
             self.angle = degrees(yaw_r)+180
@@ -66,12 +60,6 @@ class EgoVehicle:
 
             traci.vehicle.setSpeed(self.ego_vehicle_id,
                                    fabs(gazebo_coordinates.twist.linear.x))
-            # rospy.loginfo("Zoe Pos: %.2f, %.2f - Yaw: %.2f -  Speed %.2f",
-            #               self.pos_x,
-            #               self.pos_y,
-            #               self.angle,
-            #               fabs(gazebo_coordinates.twist.linear.x))
-            # print(degrees(self.yaw), degrees(pitch_r), degrees(pitch_r) + 180)
 
     def set_position_in_gazebo(self, vehicle_msg):
 
@@ -113,34 +101,21 @@ class EgoVehicle:
             traci.vehicle.setLaneChangeMode(self.ego_vehicle_id, 512)
             #traci.vehicle.setSpeed(self.ego_vehicle_id, 0)
 
-        # traci.vehicle.moveToXY(self.ego_vehicle_id,
-        #                        traci.vehicle.getRoadID(self.ego_vehicle_id),
-        #                        traci.vehicle.getLaneID(self.ego_vehicle_id),
-        #                        self.pos_x,
-        #                        self.pos_y,
-        #                        self.angle,
-        #                        2)
-
     def change_lane_callback(self, data):
 
         # check if it's a new (not zero) command
-        if self.change_lane_msg.lane_change == 0:
-            if data.lane_change != 0:
-                self.change_lane_msg.lane_change = data.lane_change
-                direction = 0
-                if data.lane_change == 1:
-                    direction = 1
-                elif data.lane_change == -1:
-                    direction = -1
-                if traci.vehicle.couldChangeLane(self.ego_vehicle_id, direction):
-                    lane_index = traci.vehicle.getLaneIndex(self.ego_vehicle_id)
-                    rospy.loginfo("EgoVehicle Lane %d", lane_index)
-                    lane_index += direction
-                    rospy.loginfo("EgoVehicle desired Lane %d", lane_index)
-                    try:
-                        traci.vehicle.changeLane(self.ego_vehicle_id, lane_index, 0)
-                    except traci.TraCIException as e:
-                        rospy.logerr("Error changing lane: %s", e.message)
-
-                self.change_lane_msg.lane_change = 0
-
+        if data.lane_change != 0:
+            direction = 0
+            if data.lane_change == 1:
+                direction = 1
+            elif data.lane_change == -1:
+                direction = -1
+            if traci.vehicle.couldChangeLane(self.ego_vehicle_id, direction):
+                lane_index = traci.vehicle.getLaneIndex(self.ego_vehicle_id)
+                rospy.loginfo("EgoVehicle Lane %d", lane_index)
+                lane_index += direction
+                rospy.loginfo("EgoVehicle desired Lane %d", lane_index)
+                try:
+                    traci.vehicle.changeLane(self.ego_vehicle_id, lane_index, 0)
+                except traci.TraCIException as e:
+                    rospy.logerr("Error changing lane: %s", e.message)

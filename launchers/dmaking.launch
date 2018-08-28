@@ -22,7 +22,7 @@
   <arg name="route_file_name" default="dmaking.rou.xml"/>
   <arg name="sumo_config_file_name" default="dmaking.sumocfg"/>
 
-  <arg name="scenario_nr" default="1"/>
+  <arg name="scenario_nr" default="5"/>
 
 
   <!-- Launch RVIZ ? -->
