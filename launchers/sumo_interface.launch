@@ -9,7 +9,7 @@
  <arg name="sumo_config_file_name" default="network.sumocfg"/>
  <arg name="ego_vehicle_name" default="prius"/>
  <arg name="scenario_nr" default="0"/>
-
+ <arg name="dmaking_time_step" default="3.0"/>
 
 
  ## Launch SUMO and interface
@@ -22,7 +22,8 @@
 	 <param name="sumo_config_file_name" value="$(arg sumo_config_file_name)" />
  	 <param name="ego_vehicle_name" value="$(arg ego_vehicle_name)" />
  	 <param name="n_scenario" value="$(arg scenario_nr)" />
-         <param name="lane_change" value="$(arg lane_change)" />
+ 	 <param name="lane_change" value="$(arg lane_change)" />
+ 	 <param name="dmaking_time_step" value="$(arg dmaking_time_step)" />
 
   </node>
 

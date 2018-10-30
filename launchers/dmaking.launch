@@ -19,12 +19,11 @@
   <arg name="use_gazebo" default="True"/>
   <arg name="control_ego_vehicle" default="True"/>
   <arg name="control_from_gazebo" default="False"/>
-  <arg name="lane_change" default="True"/>
+  <arg name="lane_change" default="False"/>
   <arg name="route_file_name" default="grenoble.rou.xml"/>
   <arg name="sumo_config_file_name" default="grenoble.sumocfg"/>
-
   <arg name="scenario_nr" default="2"/>
-
+  <arg name="dmaking_time_step" default="3.0"/>
 
   <!-- Launch RVIZ ? -->
 
@@ -63,6 +62,7 @@
       <arg name="sumo_config_file_name" value="$(arg sumo_config_file_name)"/>
       <arg name="scenario_nr" value="$(arg scenario_nr)"/>
       <arg name="lane_change" value="$(arg lane_change)"/>
+      <arg name="dmaking_time_step" value="$(arg dmaking_time_step)"/>
 
 
   </include>

@@ -23,6 +23,7 @@ class EgoVehicle:
         self.get_model_state_srv = rospy.ServiceProxy("/gazebo/get_model_state", GetModelState)
         self.set_model_state_srv = rospy.ServiceProxy("/gazebo/set_model_state", SetModelState)
         self.vehicle_control_sub = rospy.Subscriber('vehicle_change_lane', ChangeLane, self.change_lane_callback)
+        self.restart_simulation = False
 
     def read_position_from_gazebo(self):
 
@@ -94,31 +95,39 @@ class EgoVehicle:
             traci.vehicle.setSpeed(self.ego_vehicle_id, 0)
         else:
             rospy.loginfo("Controlling from SUMO")
+            # all checks off -> Speed Mode = 0
+            # disable right of way check -> Speed Mode = 23
+            # all checks on -> Speed Mode = 31
             traci.vehicle.setSpeedMode(self.ego_vehicle_id, 31)
+
+        if lane_change is True:
+            # 1621 - Default change mode, all checks on
+            traci.vehicle.setLaneChangeMode(self.ego_vehicle_id, 1621)
+        else:
             # disable all autonomous changing but still handle safety checks in the simulation,
-            # 256(collision avoidance)
-            # 512(collision avoidance and safety - gap enforcement)
-	    if lane_change is True:
-		traci.vehicle.setLaneChangeMode(self.ego_vehicle_id, 1621)
-	    else:
-	        traci.vehicle.setLaneChangeMode(self.ego_vehicle_id, 256)
-            #traci.vehicle.setSpeed(self.ego_vehicle_id, 0)
+            # 0   - do not respect other drivers when following TraCI requests, adapt speed to fulfill request
+            # 256 - collision avoidance
+            # 512 - collision avoidance and safety - gap enforcement
+            traci.vehicle.setLaneChangeMode(self.ego_vehicle_id, 0)
+            #  traci.vehicle.setSpeed(self.ego_vehicle_id, 0)
 
     def change_lane_callback(self, data):
 
         # check if it's a new (not zero) command
+        if self.restart_simulation is False:
+            self.restart_simulation = True
         if data.lane_change != 0:
             direction = 0
             if data.lane_change == 1:
                 direction = 1
             elif data.lane_change == -1:
                 direction = -1
-            if traci.vehicle.couldChangeLane(self.ego_vehicle_id, direction):
-                lane_index = traci.vehicle.getLaneIndex(self.ego_vehicle_id)
-                rospy.loginfo("EgoVehicle Lane %d", lane_index)
-                lane_index += direction
-                rospy.loginfo("EgoVehicle desired Lane %d", lane_index)
-                try:
-                    traci.vehicle.changeLane(self.ego_vehicle_id, lane_index, 0)
-                except traci.TraCIException as e:
-                    rospy.logerr("Error changing lane: %s", e.message)
+            # if traci.vehicle.couldChangeLane(self.ego_vehicle_id, direction):
+            lane_index = traci.vehicle.getLaneIndex(self.ego_vehicle_id)
+            rospy.loginfo("EgoVehicle Lane %d", lane_index)
+            lane_index += direction
+            rospy.loginfo("EgoVehicle desired Lane %d", lane_index)
+            try:
+                traci.vehicle.changeLane(self.ego_vehicle_id, lane_index, 0)
+            except traci.TraCIException as e:
+                rospy.logerr("Error changing lane: %s", e.message)
