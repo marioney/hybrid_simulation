@@ -135,16 +135,16 @@ def generate_route_file_dmaking(route_file_path, n_scenario):
             print('    <vehicle id="car_15" type="Car_100" route="route04" depart="5" />', file=routes)
             print('    <vehicle id="car_16" type="Car_130" route="route05" depart="5" />', file=routes)
         if n_scenario == 5:
-            # print('    <vehicle id="car_1" type="Car_70" route="route05" depart="3"'
-            #      ' departLane="0" departSpeed="max" />', file=routes)
-            # print('    <vehicle id="car_2" type="Car_70" route="route05" depart="3"'
-            #      ' departLane="0" departSpeed="max" />', file=routes)
-            print('    <vehicle id="car_3" type="Car_100" route="route04" depart="3"'
+            print('    <vehicle id="car_1" type="Car_70" route="route05" depart="3"'
+                  ' departLane="0" departSpeed="max" />', file=routes)
+            print('    <vehicle id="car_2" type="Car_130" route="route05" depart="3"'
+                  ' departLane="0" departSpeed="max" />', file=routes)
+            print('    <vehicle id="car_3" type="Car_130" route="route04" depart="3"'
                   ' departLane="0" departSpeed="max" />', file=routes)
             print('    <vehicle id="car_4" type="Car_130" route="route02" depart="7"'
                   ' departLane="1" departSpeed="max" />', file=routes)
-            # print('    <vehicle id="car_5" type="Car_130" route="route02" depart="7"'
-            #      ' departLane="1" departSpeed="max" />', file=routes)
+            print('    <vehicle id="car_5" type="Car_130" route="route02" depart="7"'
+                  ' departLane="1" departSpeed="max" />', file=routes)
         print("</routes>", file=routes)
 
 

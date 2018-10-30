@@ -20,6 +20,6 @@ class RosComponents:
             rospy.wait_for_service("/gazebo/spawn_sdf_model")
             self.delete_model = rospy.ServiceProxy("/gazebo/delete_model", DeleteModel)
             self.spawn_model = rospy.ServiceProxy("/gazebo/spawn_sdf_model", SpawnModel)
-        self.vehicle_status_pub = rospy.Publisher('vehilces_status', VehicleStatusArray, queue_size=1)
+        self.vehicle_status_pub = rospy.Publisher('vehicles_status', VehicleStatusArray, queue_size=1)
 
 
