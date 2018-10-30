@@ -1,3 +1,0 @@
-[console_scripts]
-rosversion = rospkg.rosversion:main
-
