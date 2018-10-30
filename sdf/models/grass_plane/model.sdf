@@ -1,0 +1,282 @@
+<?xml version='1.0'?>
+<sdf version='1.4'>
+  <model name='grass_plane'>
+    <static>true</static>
+    <link name='link'>
+
+      <visual name='visual_0'>
+        <pose>-550.0 90 0 0 0 0</pose>
+        <cast_shadows>false</cast_shadows>
+        <geometry>
+          <plane>
+            <normal>0 0 1</normal>
+            <size>100 20</size>
+          </plane>
+        </geometry>
+        <material>
+          <script>
+            <uri>model://grass_plane/materials/scripts</uri>
+            <uri>model://grass_plane/materials/textures</uri>
+            <name>vrc/grass</name>
+          </script>
+        </material>
+      </visual>
+      <visual name='visual_1'>
+        <pose>-450.0 90 0 0 0 0</pose>
+        <cast_shadows>false</cast_shadows>
+        <geometry>
+          <plane>
+            <normal>0 0 1</normal>
+            <size>100 20</size>
+          </plane>
+        </geometry>
+        <material>
+          <script>
+            <uri>model://grass_plane/materials/scripts</uri>
+            <uri>model://grass_plane/materials/textures</uri>
+            <name>vrc/grass</name>
+          </script>
+        </material>
+      </visual>
+      <visual name='visual_2'>
+        <pose>-350.0 90 0 0 0 0</pose>
+        <cast_shadows>false</cast_shadows>
+        <geometry>
+          <plane>
+            <normal>0 0 1</normal>
+            <size>100 20</size>
+          </plane>
+        </geometry>
+        <material>
+          <script>
+            <uri>model://grass_plane/materials/scripts</uri>
+            <uri>model://grass_plane/materials/textures</uri>
+            <name>vrc/grass</name>
+          </script>
+        </material>
+      </visual>
+      <visual name='visual_3'>
+        <pose>-250.0 90 0 0 0 0</pose>
+        <cast_shadows>false</cast_shadows>
+        <geometry>
+          <plane>
+            <normal>0 0 1</normal>
+            <size>100 20</size>
+          </plane>
+        </geometry>
+        <material>
+          <script>
+            <uri>model://grass_plane/materials/scripts</uri>
+            <uri>model://grass_plane/materials/textures</uri>
+            <name>vrc/grass</name>
+          </script>
+        </material>
+      </visual>
+      <visual name='visual_4'>
+        <pose>-150.0 90 0 0 0 0</pose>
+        <cast_shadows>false</cast_shadows>
+        <geometry>
+          <plane>
+            <normal>0 0 1</normal>
+            <size>100 20</size>
+          </plane>
+        </geometry>
+        <material>
+          <script>
+            <uri>model://grass_plane/materials/scripts</uri>
+            <uri>model://grass_plane/materials/textures</uri>
+            <name>vrc/grass</name>
+          </script>
+        </material>
+      </visual>
+      <visual name='visual_5'>
+        <pose>-50.0 90 0 0 0 0</pose>
+        <cast_shadows>false</cast_shadows>
+        <geometry>
+          <plane>
+            <normal>0 0 1</normal>
+            <size>100 20</size>
+          </plane>
+        </geometry>
+        <material>
+          <script>
+            <uri>model://grass_plane/materials/scripts</uri>
+            <uri>model://grass_plane/materials/textures</uri>
+            <name>vrc/grass</name>
+          </script>
+        </material>
+      </visual>
+      <visual name='visual_6'>
+        <pose>50.0 90 0 0 0 0</pose>
+        <cast_shadows>false</cast_shadows>
+        <geometry>
+          <plane>
+            <normal>0 0 1</normal>
+            <size>100 20</size>
+          </plane>
+        </geometry>
+        <material>
+          <script>
+            <uri>model://grass_plane/materials/scripts</uri>
+            <uri>model://grass_plane/materials/textures</uri>
+            <name>vrc/grass</name>
+          </script>
+        </material>
+      </visual>
+      <visual name='visual_7'>
+        <pose>150.0 90 0 0 0 0</pose>
+        <cast_shadows>false</cast_shadows>
+        <geometry>
+          <plane>
+            <normal>0 0 1</normal>
+            <size>100 20</size>
+          </plane>
+        </geometry>
+        <material>
+          <script>
+            <uri>model://grass_plane/materials/scripts</uri>
+            <uri>model://grass_plane/materials/textures</uri>
+            <name>vrc/grass</name>
+          </script>
+        </material>
+      </visual>
+      <visual name='visual_8'>
+        <pose>-550.0 116.6 0 0 0 0</pose>
+        <cast_shadows>false</cast_shadows>
+        <geometry>
+          <plane>
+            <normal>0 0 1</normal>
+            <size>100 20</size>
+          </plane>
+        </geometry>
+        <material>
+          <script>
+            <uri>model://grass_plane/materials/scripts</uri>
+            <uri>model://grass_plane/materials/textures</uri>
+            <name>vrc/grass</name>
+          </script>
+        </material>
+      </visual>
+      <visual name='visual_9'>
+        <pose>-450.0 116.6 0 0 0 0</pose>
+        <cast_shadows>false</cast_shadows>
+        <geometry>
+          <plane>
+            <normal>0 0 1</normal>
+            <size>100 20</size>
+          </plane>
+        </geometry>
+        <material>
+          <script>
+            <uri>model://grass_plane/materials/scripts</uri>
+            <uri>model://grass_plane/materials/textures</uri>
+            <name>vrc/grass</name>
+          </script>
+        </material>
+      </visual>
+      <visual name='visual_10'>
+        <pose>-350.0 116.6 0 0 0 0</pose>
+        <cast_shadows>false</cast_shadows>
+        <geometry>
+          <plane>
+            <normal>0 0 1</normal>
+            <size>100 20</size>
+          </plane>
+        </geometry>
+        <material>
+          <script>
+            <uri>model://grass_plane/materials/scripts</uri>
+            <uri>model://grass_plane/materials/textures</uri>
+            <name>vrc/grass</name>
+          </script>
+        </material>
+      </visual>
+      <visual name='visual_11'>
+        <pose>-250.0 116.6 0 0 0 0</pose>
+        <cast_shadows>false</cast_shadows>
+        <geometry>
+          <plane>
+            <normal>0 0 1</normal>
+            <size>100 20</size>
+          </plane>
+        </geometry>
+        <material>
+          <script>
+            <uri>model://grass_plane/materials/scripts</uri>
+            <uri>model://grass_plane/materials/textures</uri>
+            <name>vrc/grass</name>
+          </script>
+        </material>
+      </visual>
+      <visual name='visual_12'>
+        <pose>-150.0 116.6 0 0 0 0</pose>
+        <cast_shadows>false</cast_shadows>
+        <geometry>
+          <plane>
+            <normal>0 0 1</normal>
+            <size>100 20</size>
+          </plane>
+        </geometry>
+        <material>
+          <script>
+            <uri>model://grass_plane/materials/scripts</uri>
+            <uri>model://grass_plane/materials/textures</uri>
+            <name>vrc/grass</name>
+          </script>
+        </material>
+      </visual>
+      <visual name='visual_13'>
+        <pose>-50.0 116.6 0 0 0 0</pose>
+        <cast_shadows>false</cast_shadows>
+        <geometry>
+          <plane>
+            <normal>0 0 1</normal>
+            <size>100 20</size>
+          </plane>
+        </geometry>
+        <material>
+          <script>
+            <uri>model://grass_plane/materials/scripts</uri>
+            <uri>model://grass_plane/materials/textures</uri>
+            <name>vrc/grass</name>
+          </script>
+        </material>
+      </visual>
+      <visual name='visual_14'>
+        <pose>50.0 116.6 0 0 0 0</pose>
+        <cast_shadows>false</cast_shadows>
+        <geometry>
+          <plane>
+            <normal>0 0 1</normal>
+            <size>100 20</size>
+          </plane>
+        </geometry>
+        <material>
+          <script>
+            <uri>model://grass_plane/materials/scripts</uri>
+            <uri>model://grass_plane/materials/textures</uri>
+            <name>vrc/grass</name>
+          </script>
+        </material>
+      </visual>
+      <visual name='visual_15'>
+        <pose>150.0 116.6 0 0 0 0</pose>
+        <cast_shadows>false</cast_shadows>
+        <geometry>
+          <plane>
+            <normal>0 0 1</normal>
+            <size>100 20</size>
+          </plane>
+        </geometry>
+        <material>
+          <script>
+            <uri>model://grass_plane/materials/scripts</uri>
+            <uri>model://grass_plane/materials/textures</uri>
+            <name>vrc/grass</name>
+          </script>
+        </material>
+      </visual>
+    </link>
+  </model>
+</sdf>
+
