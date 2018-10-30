@@ -101,7 +101,7 @@ class EgoVehicle:
 	    if lane_change is True:
 		traci.vehicle.setLaneChangeMode(self.ego_vehicle_id, 1621)
 	    else:
-	        traci.vehicle.setLaneChangeMode(self.ego_vehicle_id, 512)
+	        traci.vehicle.setLaneChangeMode(self.ego_vehicle_id, 256)
             #traci.vehicle.setSpeed(self.ego_vehicle_id, 0)
 
     def change_lane_callback(self, data):
