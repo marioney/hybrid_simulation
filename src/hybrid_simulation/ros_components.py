@@ -12,6 +12,7 @@ class RosComponents:
         self.use_gazebo = rospy.get_param('~use_gazebo', True)
         self.control_ego_vehicle = rospy.get_param('~control_ego_vehicle', True)
         self.control_from_gazebo = rospy.get_param('~control_from_gazebo', True)
+        self.lane_change = rospy.get_param('~lane_change', False)
         self.ego_vehicle_id = rospy.get_param('~ego_vehicle_name', "prius")
 
         if self.use_gazebo is True:

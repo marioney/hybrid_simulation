@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on Tue Oct 30 14:26:04 2018 by Netedit Version 0.32.0
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
+
+    <input>
+        <sumo-net-file value="/home/dsierrag/catkin_ws_kinetic/src/hybrid_simulation/sumo_files/grenoble.net.xml"/>
+    </input>
+
+    <output>
+        <output-file value="/home/dsierrag/catkin_ws_kinetic/src/hybrid_simulation/sumo_files/grenoble.net.xml"/>
+    </output>
+
+    <processing>
+        <no-turnarounds value="true"/>
+        <offset.disable-normalization value="true"/>
+        <lefthand value="false"/>
+        <junctions.corner-detail value="0"/>
+        <rectangular-lane-cut value="false"/>
+        <walkingareas value="false"/>
+    </processing>
+
+</configuration>
+-->
+
+<net version="0.27" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/net_file.xsd">
+
+    <location netOffset="0.00,0.00" convBoundary="0.00,0.00,3000.00,0.00" origBoundary="-10000000000.00,-10000000000.00,10000000000.00,10000000000.00" projParameter="!"/>
+
+    <edge id=":j100_0" function="internal">
+        <lane id=":j100_0_0" index="0" speed="37.00" length="0.10" shape="100.00,-4.95 100.00,-4.95"/>
+        <lane id=":j100_0_1" index="1" speed="37.00" length="0.10" shape="100.00,-1.65 100.00,-1.65"/>
+    </edge>
+    <edge id=":j200_0" function="internal">
+        <lane id=":j200_0_0" index="0" speed="37.00" length="0.10" shape="200.00,-4.95 200.00,-4.95"/>
+        <lane id=":j200_0_1" index="1" speed="37.00" length="0.10" shape="200.00,-1.65 200.00,-1.65"/>
+    </edge>
+    <edge id=":j300_0" function="internal">
+        <lane id=":j300_0_0" index="0" speed="37.00" length="0.10" shape="300.00,-4.95 300.00,-4.95"/>
+        <lane id=":j300_0_1" index="1" speed="37.00" length="0.10" shape="300.00,-1.65 300.00,-1.65"/>
+    </edge>
+    <edge id=":j400_0" function="internal">
+        <lane id=":j400_0_0" index="0" speed="37.00" length="0.10" shape="400.00,-4.95 400.00,-4.95"/>
+        <lane id=":j400_0_1" index="1" speed="37.00" length="0.10" shape="400.00,-1.65 400.00,-1.65"/>
+    </edge>
+    <edge id=":j500_0" function="internal">
+        <lane id=":j500_0_0" index="0" speed="37.00" length="0.10" shape="500.00,-4.95 500.00,-4.95"/>
+        <lane id=":j500_0_1" index="1" speed="37.00" length="0.10" shape="500.00,-1.65 500.00,-1.65"/>
+    </edge>
+
+    <edge id="e0-100" from="j0" to="j100" priority="1">
+        <lane id="e0-100_0" index="0" speed="37.00" length="100.00" shape="0.00,-4.95 100.00,-4.95"/>
+        <lane id="e0-100_1" index="1" speed="37.00" length="100.00" shape="0.00,-1.65 100.00,-1.65"/>
+    </edge>
+    <edge id="e100-200" from="j100" to="j200" priority="1">
+        <lane id="e100-200_0" index="0" speed="37.00" length="100.00" shape="100.00,-4.95 200.00,-4.95"/>
+        <lane id="e100-200_1" index="1" speed="37.00" length="100.00" shape="100.00,-1.65 200.00,-1.65"/>
+    </edge>
+    <edge id="e200-300" from="j200" to="j300" priority="1">
+        <lane id="e200-300_0" index="0" speed="37.00" length="100.00" shape="200.00,-4.95 300.00,-4.95"/>
+        <lane id="e200-300_1" index="1" speed="37.00" length="100.00" shape="200.00,-1.65 300.00,-1.65"/>
+    </edge>
+    <edge id="e300-400" from="j300" to="j400" priority="1">
+        <lane id="e300-400_0" index="0" speed="37.00" length="100.00" shape="300.00,-4.95 400.00,-4.95"/>
+        <lane id="e300-400_1" index="1" speed="37.00" length="100.00" shape="300.00,-1.65 400.00,-1.65"/>
+    </edge>
+    <edge id="e400-500" from="j400" to="j500" priority="1">
+        <lane id="e400-500_0" index="0" speed="37.00" length="100.00" shape="400.00,-4.95 500.00,-4.95"/>
+        <lane id="e400-500_1" index="1" speed="37.00" length="100.00" shape="400.00,-1.65 500.00,-1.65"/>
+    </edge>
+    <edge id="e500-3000" from="j500" to="j3000" priority="1">
+        <lane id="e500-3000_0" index="0" speed="37.00" length="2500.00" shape="500.00,-4.95 3000.00,-4.95"/>
+        <lane id="e500-3000_1" index="1" speed="37.00" length="2500.00" shape="500.00,-1.65 3000.00,-1.65"/>
+    </edge>
+
+    <junction id="j0" type="dead_end" x="0.00" y="0.00" incLanes="" intLanes="" shape="0.00,-0.05 0.00,-6.55"/>
+    <junction id="j100" type="priority" x="100.00" y="0.00" incLanes="e0-100_0 e0-100_1" intLanes=":j100_0_0 :j100_0_1" shape="100.00,-0.05 100.00,-6.55 100.00,-0.05">
+        <request index="0" response="00" foes="00" cont="0"/>
+        <request index="1" response="00" foes="00" cont="0"/>
+    </junction>
+    <junction id="j200" type="priority" x="200.00" y="0.00" incLanes="e100-200_0 e100-200_1" intLanes=":j200_0_0 :j200_0_1" shape="200.00,-0.05 200.00,-6.55 200.00,-0.05">
+        <request index="0" response="00" foes="00" cont="0"/>
+        <request index="1" response="00" foes="00" cont="0"/>
+    </junction>
+    <junction id="j300" type="priority" x="300.00" y="0.00" incLanes="e200-300_0 e200-300_1" intLanes=":j300_0_0 :j300_0_1" shape="300.00,-0.05 300.00,-6.55 300.00,-0.05">
+        <request index="0" response="00" foes="00" cont="0"/>
+        <request index="1" response="00" foes="00" cont="0"/>
+    </junction>
+    <junction id="j3000" type="dead_end" x="3000.00" y="0.00" incLanes="e500-3000_0 e500-3000_1" intLanes="" shape="3000.00,-6.55 3000.00,-0.05"/>
+    <junction id="j400" type="priority" x="400.00" y="0.00" incLanes="e300-400_0 e300-400_1" intLanes=":j400_0_0 :j400_0_1" shape="400.00,-0.05 400.00,-6.55 400.00,-0.05">
+        <request index="0" response="00" foes="00" cont="0"/>
+        <request index="1" response="00" foes="00" cont="0"/>
+    </junction>
+    <junction id="j500" type="priority" x="500.00" y="0.00" incLanes="e400-500_0 e400-500_1" intLanes=":j500_0_0 :j500_0_1" shape="500.00,-0.05 500.00,-6.55 500.00,-0.05">
+        <request index="0" response="00" foes="00" cont="0"/>
+        <request index="1" response="00" foes="00" cont="0"/>
+    </junction>
+
+    <connection from="e0-100" to="e100-200" fromLane="0" toLane="0" via=":j100_0_0" dir="s" state="M"/>
+    <connection from="e0-100" to="e100-200" fromLane="1" toLane="1" via=":j100_0_1" dir="s" state="M"/>
+    <connection from="e100-200" to="e200-300" fromLane="0" toLane="0" via=":j200_0_0" dir="s" state="M"/>
+    <connection from="e100-200" to="e200-300" fromLane="1" toLane="1" via=":j200_0_1" dir="s" state="M"/>
+    <connection from="e200-300" to="e300-400" fromLane="0" toLane="0" via=":j300_0_0" dir="s" state="M"/>
+    <connection from="e200-300" to="e300-400" fromLane="1" toLane="1" via=":j300_0_1" dir="s" state="M"/>
+    <connection from="e300-400" to="e400-500" fromLane="0" toLane="0" via=":j400_0_0" dir="s" state="M"/>
+    <connection from="e300-400" to="e400-500" fromLane="1" toLane="1" via=":j400_0_1" dir="s" state="M"/>
+    <connection from="e400-500" to="e500-3000" fromLane="0" toLane="0" via=":j500_0_0" dir="s" state="M"/>
+    <connection from="e400-500" to="e500-3000" fromLane="1" toLane="1" via=":j500_0_1" dir="s" state="M"/>
+
+    <connection from=":j100_0" to="e100-200" fromLane="0" toLane="0" dir="s" state="M"/>
+    <connection from=":j100_0" to="e100-200" fromLane="1" toLane="1" dir="s" state="M"/>
+    <connection from=":j200_0" to="e200-300" fromLane="0" toLane="0" dir="s" state="M"/>
+    <connection from=":j200_0" to="e200-300" fromLane="1" toLane="1" dir="s" state="M"/>
+    <connection from=":j300_0" to="e300-400" fromLane="0" toLane="0" dir="s" state="M"/>
+    <connection from=":j300_0" to="e300-400" fromLane="1" toLane="1" dir="s" state="M"/>
+    <connection from=":j400_0" to="e400-500" fromLane="0" toLane="0" dir="s" state="M"/>
+    <connection from=":j400_0" to="e400-500" fromLane="1" toLane="1" dir="s" state="M"/>
+    <connection from=":j500_0" to="e500-3000" fromLane="0" toLane="0" dir="s" state="M"/>
+    <connection from=":j500_0" to="e500-3000" fromLane="1" toLane="1" dir="s" state="M"/>
+
+</net>

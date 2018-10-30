@@ -84,7 +84,7 @@ class EgoVehicle:
         except rospy.ServiceException as e:
             rospy.logerr("Error receiving gazebo state: %s", e.message)
 
-    def init_ego_car_control(self, control_from_gazebo):
+    def init_ego_car_control(self, control_from_gazebo, lane_change=False):
 
         rospy.loginfo("Ego-vehicle departed")
         if control_from_gazebo is True:
@@ -98,7 +98,10 @@ class EgoVehicle:
             # disable all autonomous changing but still handle safety checks in the simulation,
             # 256(collision avoidance)
             # 512(collision avoidance and safety - gap enforcement)
-            traci.vehicle.setLaneChangeMode(self.ego_vehicle_id, 512)
+	    if lane_change is True:
+		traci.vehicle.setLaneChangeMode(self.ego_vehicle_id, 1621)
+	    else:
+	        traci.vehicle.setLaneChangeMode(self.ego_vehicle_id, 512)
             #traci.vehicle.setSpeed(self.ego_vehicle_id, 0)
 
     def change_lane_callback(self, data):

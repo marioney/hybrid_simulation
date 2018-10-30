@@ -187,7 +187,7 @@ def gazebo_synchro(subs, vehicle_id):
         if ros_node_comp.control_ego_vehicle is True:
             rospy.loginfo("Starting control of %s (ego-vehicle)", vehicle_id)
             ego_vehicle = EgoVehicle(ros_node_comp.ego_vehicle_id)
-            ego_vehicle.init_ego_car_control(ros_node_comp.control_from_gazebo)
+            ego_vehicle.init_ego_car_control(ros_node_comp.control_from_gazebo, ros_node_comp.lane_change)
     else:
         rospack1 = RosPack()
         package_path = rospack1.get_path('hybrid_simulation')

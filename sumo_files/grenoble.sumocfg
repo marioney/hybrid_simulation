@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:noNamespaceSchemaLocation="http://sumo.sf.net/xsd/sumoConfiguration.xsd">
+    <input>
+        <net-file value="grenoble.net.xml"/>
+        <route-files value="grenoble.rou.xml"/>
+    </input>
+    <time>
+        <begin value="0"/>
+        <step-length value="0.05"/>
+    </time>
+    <time-to-teleport value="-1"/>
+    <lanechange.duration value="1.5"/>
+    <!--<lateral-resolution value="0.2"/>-->
+</configuration>
+ 

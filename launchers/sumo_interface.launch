@@ -4,6 +4,7 @@
  <arg name="use_gazebo" default="True"/>
  <arg name="control_ego_vehicle" default="True"/>
  <arg name="control_from_gazebo" default="True"/>
+ <arg name="lane_change" default="False"/>
  <arg name="route_file_name" default="network_traci.rou.xml"/>
  <arg name="sumo_config_file_name" default="network.sumocfg"/>
  <arg name="ego_vehicle_name" default="prius"/>
@@ -21,6 +22,8 @@
 	 <param name="sumo_config_file_name" value="$(arg sumo_config_file_name)" />
  	 <param name="ego_vehicle_name" value="$(arg ego_vehicle_name)" />
  	 <param name="n_scenario" value="$(arg scenario_nr)" />
+         <param name="lane_change" value="$(arg lane_change)" />
+
   </node>
 
 </launch>

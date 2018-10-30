@@ -7,7 +7,7 @@
 
     <gui fullscreen='0'>
       <camera name='user_camera'>
-        <pose frame=''>45.6046 53.9823 37.9042 0 0.395643 0.752194</pose>
+        <pose frame='prius'>10.6046 -5.9823 15.9042 0 0.395643 0.752194</pose>
         <view_controller>orbit</view_controller>
         <projection_type>perspective</projection_type>
       </camera>
@@ -43,8 +43,8 @@
     </include>
     <road name="D1">
       <width>6.6</width>
-      <point>-600 103.3 0</point>
-      <point>200 103.3 0</point>
+      <point>0 -3.3 0</point>
+      <point>3000 -3.3 0</point>
     </road>
     <plugin name="SumoUpdate" filename="libSumoWorldPlugin.so">
         <ego_vehicle_model_name>prius</ego_vehicle_model_name>
