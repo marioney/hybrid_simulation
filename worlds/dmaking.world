@@ -7,9 +7,13 @@
 
     <gui fullscreen='0'>
       <camera name='user_camera'>
-        <pose frame=''>45.6046 53.9823 37.9042 0 0.395643 0.752194</pose>
         <view_controller>orbit</view_controller>
         <projection_type>perspective</projection_type>
+        <track_visual>
+          <name>prius</name>
+          <static>true</static>
+          <xyz>39 15 6</xyz>
+        </track_visual>
       </camera>
     </gui>
 
