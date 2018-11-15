@@ -212,6 +212,9 @@ def gazebo_synchro(subs, vehicle_id):
         file_xml = open(package_path + "/sdf/models/car/car_model.sdf")
         xml_string = file_xml.read()
         rospy.loginfo("Spawning model: %s", vehicle_id)
+        # To change lane change mode of a vehicle
+        if vehicle_id == "car_X":
+            traci.vehicle.setLaneChangeMode(vehicle_id, 0)
         v_position = subs.get(tc.VAR_POSITION, None)
         v_angle = subs.get(tc.VAR_ANGLE, None)
         v_angle_r = radians(360 - v_angle)
