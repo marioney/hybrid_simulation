@@ -38,9 +38,6 @@
       </link>
       <static>true</static>
     </model>
-    <include>
-      <uri>model://grass_plane</uri>
-    </include>
     <road name="D1">
       <width>6.6</width>
       <point>0 -3.3 0</point>
