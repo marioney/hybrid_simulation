@@ -12,7 +12,7 @@
         <track_visual>
           <name>prius</name>
           <static>true</static>
-          <xyz>39 17 6</xyz>
+          <xyz>-98 25 52</xyz>
         </track_visual>
       </camera>
     </gui>

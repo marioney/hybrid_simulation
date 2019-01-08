@@ -22,7 +22,7 @@
   <arg name="lane_change" default="False"/>
   <arg name="route_file_name" default="grenoble.rou.xml"/>
   <arg name="sumo_config_file_name" default="grenoble.sumocfg"/>
-  <arg name="scenario_nr" default="2"/>
+  <arg name="scenario_nr" default="1"/>
   <arg name="dmaking_time_step" default="2.0"/>
 
   <!-- Launch RVIZ ? -->
