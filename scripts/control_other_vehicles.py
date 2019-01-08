@@ -63,6 +63,7 @@ def publish_tf_timer_callback(event):
     global pause_simulation
     global ego_vehicle
     global pause_simulation_timer
+    global simulation_time
 
     br = tf.TransformBroadcaster()
     vehicles_msg_array = VehicleStatusArray()
@@ -114,6 +115,7 @@ def publish_tf_timer_callback(event):
     # Is the simulation waiting for a decision?
     waiting_for_decision = pause_simulation
     vehicles_msg_array.awaiting_decision = waiting_for_decision
+    vehicles_msg_array.time_simulation = simulation_time
     ros_node_comp.vehicle_status_pub.publish(vehicles_msg_array)
 
 
@@ -125,6 +127,8 @@ def run(event):
     global pause_simulation
     global ego_vehicle
     global pause_simulation_timer
+    global sumo_time_step
+    global simulation_time
 
     if pause_simulation is False:
 
@@ -193,6 +197,8 @@ def run(event):
             #         # otherwise try to keep green for EW
             #         traci.trafficlight.setPhase("911", 2)
             traci_controller.setting.step += 1
+            simulation_time = traci_controller.setting.step * sumo_time_step
+            # print("simulation_time: ", simulation_time)
     else:
         # rospy.loginfo("Waiting for decision")
         if ego_vehicle.restart_simulation is True:
@@ -327,12 +333,16 @@ if __name__ == "__main__":
     global ego_vehicle
     global pause_simulation
     global pause_simulation_timer
+    global simulation_time
+    global sumo_time_step
 
+    sumo_time_step = 0.05
+    simulation_time = 0.0
     ego_vehicle = None
     pause_simulation = False
 
     rospy.Timer(rospy.Duration.from_sec(0.05), publish_tf_timer_callback)
-    rospy.Timer(rospy.Duration.from_sec(0.05), run)
+    rospy.Timer(rospy.Duration.from_sec(sumo_time_step), run)
     pause_simulation_timer = rospy.Timer(rospy.Duration.from_sec(dmaking_time_step),
                                          dmaking_timer_callback, oneshot=True)
     rospy.loginfo("SUMO Interface -- Starting spinner")

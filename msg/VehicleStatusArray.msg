@@ -2,3 +2,4 @@
 Header header
 VehicleStatus[] VehiclesDetected
 bool awaiting_decision
+float32 time_simulation
