@@ -53,10 +53,10 @@ namespace gazebo
             tmp_model = world_->ModelByIndex(n_model);
             std::string frame_id;
             frame_id = tmp_model->GetName();
-            if (frame_id == ego_vehicle_model_name_ )
-            {
-                continue;
-            }
+            // if (frame_id == ego_vehicle_model_name_ )
+            // {
+            //     continue;
+            // }
             if (frame_id == "ground")
             {
                 continue;
@@ -73,7 +73,7 @@ namespace gazebo
             }
             catch (tf2::TransformException ex)
             {
-                ROS_ERROR("vehicle: %s - %s", frame_id.c_str(), ex.what());
+                // ROS_ERROR("vehicle: %s - %s", frame_id.c_str(), ex.what());
                 continue;
             }
             //
