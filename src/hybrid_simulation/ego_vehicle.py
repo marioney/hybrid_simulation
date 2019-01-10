@@ -115,6 +115,8 @@ class EgoVehicle:
             traci.vehicle.setLaneChangeMode(self.ego_vehicle_id, 0)
             # all checks off -> Speed Mode = 0
             traci.vehicle.setSpeedMode(self.ego_vehicle_id, 0)
+            # set default speed to max Speed
+            traci.vehicle.setSpeed(self.ego_vehicle_id,traci.vehicle.getMaxSpeed(self.ego_vehicle_id))
 
         elif flag_external_control == 'lateral':
             # external software provides lane change commands
