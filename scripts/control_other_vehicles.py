@@ -1,7 +1,4 @@
 #!/usr/bin/env python
-# @file    control_other_vehicles.py
-# @author  Mario Garzon
-
 
 from __future__ import absolute_import
 from __future__ import print_function
@@ -43,28 +40,30 @@ import traci
 
 PI = 3.1415926535897
 traci_controller = TraciControls()
-initial_states_vehicles = []
+initial_states_vehicles = [] # list of dictionaries
+# each dictionary contains {id:'prius', speed: 35.84, max_speed: 36.0, pos: (20.32924471235345, -4.95), angle: 90.0, road_id: 'e0-100', lane_index: 0 }
 
 def dmaking_timer_callback(event):
-    global pause_simulation
-    global pause_simulation_timer
-    if pause_simulation is False:
+    global paused_simulation
+    if paused_simulation is False:
         rospy.loginfo("Waiting for decision")
-        pause_simulation = True
+        paused_simulation = True
 
 def publish_tf_timer_callback(event):
 
     # rospy.loginfo("Timer called at %s", str(event.current_real))
 
-    global pause_simulation
+    global paused_simulation
     global ego_vehicle
     global pause_simulation_timer
-    global simulation_time
+    global simulation_index
 
     br = tf.TransformBroadcaster()
     vehicles_msg_array = VehicleStatusArray()
     vehicles_msg_array.header.stamp = rospy.Time.now()
     vehicles_msg_array.header.frame_id = "world"
+
+    simulation_time = traci_controller.setting.step * rospy.get_param('~sumo_time_step')
 
     for running_vehicle, subs in traci.vehicle.getSubscriptionResults().items():
         if running_vehicle is not None:
@@ -109,16 +108,12 @@ def publish_tf_timer_callback(event):
                 vehicle_msg.lane = v_lane_id
                 vehicle_msg.signals = v_signals
                 vehicles_msg_array.VehiclesDetected.append(vehicle_msg)
-                # if running_vehicle == ego_vehicle.ego_vehicle_id:
-                #     # rospy.loginfo("Control egovehicle")
-                #     if ros_node_comp.use_gazebo is True:
-                #         # rospy.loginfo("Use Gazebo True")
-                #         if ros_node_comp.control_from_gazebo is False:
-                #             ego_vehicle.set_position_in_gazebo(vehicle_msg)
+
     # Is the simulation waiting for a decision?
-    waiting_for_decision = pause_simulation
+    waiting_for_decision = paused_simulation
     vehicles_msg_array.awaiting_decision = waiting_for_decision
     vehicles_msg_array.time_simulation = simulation_time
+    vehicles_msg_array.simulation_index = simulation_index
     ros_node_comp.vehicle_status_pub.publish(vehicles_msg_array)
 
 def pause():
@@ -134,11 +129,7 @@ def initialize_subscription_vehicles():
     # plus the ones still waiting to start. This number may be smaller than
     # the actual number of vehicles still to come because of delayed route
     # file parsing
-    iter = 0
     if traci.simulation.getMinExpectedNumber() > 0:
-        iter += 1;
-        print('Iteration: ', iter)
-
         # initial simulation step needed to make vehicles depart
         traci.simulationStep()
         traci_controller.setting.step += 1
@@ -159,97 +150,94 @@ def initialize_subscription_vehicles():
                 if ros_node_comp.use_gazebo is True:
                     init_vehicle_model_and_spawn_gazebo(subs, v)
 
-        move_nodes = []
+        # save initial states
         for veh, subs in traci.vehicle.getSubscriptionResults().items():
-            print('veh: ',veh)
-            print('subs: ',subs)
-            ''' subs example: 64: 35.842394907572306, 65: 36.0, 66: (20.32924471235345, -4.95), 67: 90.0, 80: 'e0-100', 82: 0, 86: 20.32924471235345, 91: 0
-            64: VAR_SPEED
-            65: VAR_MAXSPEED
-            66: VAR_POSITION
-            67: VAR_ANGLE
-            80: VAR_ROAD_ID
-            82: VAR_LANE_INDEX '''
-            move_nodes.append((veh, subs[tc.VAR_ROAD_ID], subs[tc.VAR_LANEPOSITION]))
+            this_vehicle_data = {
+                'id': veh,
+                'speed': traci.vehicle.getSpeed(veh),
+                'max_speed': subs[65],
+                'lane_position': traci.vehicle.getLanePosition(veh),
+                'position': traci.vehicle.getPosition(veh),
+                'angle': traci.vehicle.getAngle(veh),
+                'edge_id': traci.vehicle.getRoadID(veh),
+                'route_id': traci.vehicle.getRouteID(veh),
+                'lane_id':  traci.vehicle.getLaneID(veh),
+                'lane_idx': traci.vehicle.getLaneIndex(veh)
+            }
+            initial_states_vehicles.append(this_vehicle_data)
+
+        # another simulation step is executed to stay in line with randomize_state_vehicles,
+        # which requires an additional step execution to perform the moveToXY and setRouteID
+
+        traci.simulationStep()
+        # print('Initial_states_vehicles: ')
+        # for elem in initial_states_vehicles:
+        #     print(elem)
         # pause()
 
 def randomize_state_vehicles():
     # This function randomizes the initial state of the vehicles, with variability depending on the randomize flag
-    pass
+    print('Entered randomize state vehicles')
+
+    for vehicle_info in initial_states_vehicles[::-1]:
+        print('Initial state for vehicle %s', vehicle_info['id'])
+        print(vehicle_info)
+        this_vehicle_id = vehicle_info['id']
+        traci.vehicle.moveToXY(this_vehicle_id, vehicle_info['edge_id'], vehicle_info['lane_idx'],
+        vehicle_info['position'][0], vehicle_info['position'][1], vehicle_info['angle'], 2)
+        traci.vehicle.setRouteID(this_vehicle_id, vehicle_info['route_id'])
+
+    traci.simulationStep()
+
+    # Set route: changes the vehicle route to given edges list. The first edge in the list has to be the one that the vehicle is at at the moment.
+    # for vehicle_info in initial_states_vehicles[::-1]:
+    traci.vehicle.setRouteID(this_vehicle_id, vehicle_info['route_id'])
+    traci.simulationStep()
+
+    print('check correct repositioning')
+    for veh, subs in traci.vehicle.getSubscriptionResults().items():
+        this_vehicle_data = {
+            'id': veh,
+            'speed': traci.vehicle.getSpeed(veh),
+            'max_speed': subs[65],
+            'lane_position': traci.vehicle.getLanePosition(veh),
+            'position': traci.vehicle.getPosition(veh),
+            'angle': traci.vehicle.getAngle(veh),
+            'edge_id': traci.vehicle.getRoadID(veh),
+            'route_id': traci.vehicle.getRouteID(veh),
+            'lane_id':  traci.vehicle.getLaneID(veh),
+            'lane_idx': traci.vehicle.getLaneIndex(veh)
+        }
+        print(this_vehicle_data)
+    pause()
 
 def run(event):
-    global pause_simulation
+    global paused_simulation
+    global finished_simulation
     global ego_vehicle
     global pause_simulation_timer
-    global sumo_time_step
-    global simulation_time
 
-    if not pause_simulation:
+    simulation_duration = rospy.get_param('~simulation_duration')
+
+    if not paused_simulation and not finished_simulation:
         traci.simulationStep()
 
-    traci_controller.setting.step += 1
-    simulation_time = traci_controller.setting.step * sumo_time_step
-    print("simulation_time: ", simulation_time)
+        traci_controller.setting.step += 1
+        simulation_time = traci_controller.setting.step * rospy.get_param('~sumo_time_step')
+        # print("simulation_time: ", simulation_time)
 
-#     if not pause_simulation:
-#             move_nodes = []
-#             for veh, subs in traci.vehicle.getSubscriptionResults().items():
-#                 # print('veh: ',veh)
-#                 # print('subs: ',subs)
-#                 # pause()
-#                 move_nodes.append(
-#                     (veh, subs[tc.VAR_ROAD_ID], subs[tc.VAR_LANEPOSITION]))
-#
-#
-#             if departed is not None:
-#                 # print("step", traci_controller.setting.step, " departed >", departed)
-#                 for v in departed:
-#                     traci.vehicle.subscribe(v, [tc.VAR_POSITION, tc.VAR_ANGLE, tc.VAR_ROAD_ID,
-#                                                 tc.VAR_LANEPOSITION, tc.VAR_MAXSPEED, tc.VAR_SPEED,
-#                                                 tc.VAR_LANE_INDEX, tc.VAR_SIGNALS])
-#                     subs = traci.vehicle.getSubscriptionResults(v)
-#                     move_nodes.append((v, subs[tc.VAR_ROAD_ID], subs[tc.VAR_LANEPOSITION]))
-#                     if ros_node_comp.use_gazebo is True:
-#                         gazebo_synchro(subs, v)
-#
-#                 if ros_node_comp.use_gazebo is True:
-#                     arrived = traci.simulation.getArrivedIDList()
-#                     if arrived is not None:
-#                         # print("step", traci_controller.setting.step, " departed >", departed)
-#                         for item_name in arrived:
-#                             rospy.loginfo("Deleting model: %s", item_name)
-#                             if ego_vehicle is not None:
-#                                 if item_name == ego_vehicle.ego_vehicle_id:
-#                                     rospy.loginfo("Not Deleting model: %s", item_name)
-#                                     continue
-#                             try:
-#                                 ros_node_comp.delete_model(item_name)
-#                                 rospy.loginfo("Deleting model OK!")
-#                             except rospy.ServiceException as e:
-#                                 rospy.logerr("Delete Service call failed: %s", e.message)
-#
-#             for vehicle_id, edge, pos in move_nodes:
-#                 traci_controller.check_initial_position(vehicle_id, edge, pos)
-#                 vehicle = traci_controller.vehicle_status[vehicle_id]
-#                 if traci_controller.setting.verbose:
-#                     print("vehicle ID ", vehicle_id, "Pos: ", vehicle, "Target: ", vehicle.target)
-#                 if edge == vehicle.target:
-#                     print("vehicle ID", vehicle_id, "Arrived - ")
-#                     traci_controller.restart(vehicle_id, "D1")
-#
-#
-#             traci_controller.setting.step += 1
-#             simulation_time = traci_controller.setting.step * sumo_time_step
-#             print("simulation_time: ", simulation_time)
-#
-#
-#     else:
-#         # rospy.loginfo("Waiting for decision")
-#         if ego_vehicle.restart_simulation is True:
-#             pause_simulation = False
-#             ego_vehicle.restart_simulation = False
-#             pause_simulation_timer = rospy.Timer(rospy.Duration.from_sec(dmaking_time_step),
-#                                                  dmaking_timer_callback, oneshot=True)
+        if simulation_time > simulation_duration:
+            print('The simulation has finished!')
+            finished_simulation = True
+
+
+    elif not finished_simulation:
+        rospy.loginfo("Waiting for decision")
+        if ego_vehicle.resume_simulation is True:
+            paused_simulation = False
+            ego_vehicle.resume_simulation = False
+            pause_simulation_timer = rospy.Timer(rospy.Duration.from_sec(rospy.get_param('~dmaking_time_step')),
+                                                 dmaking_timer_callback, oneshot=True)
 
 
 def init_vehicle_model_and_spawn_gazebo(subs, vehicle_id):
@@ -259,7 +247,7 @@ def init_vehicle_model_and_spawn_gazebo(subs, vehicle_id):
     if vehicle_id == ros_node_comp.ego_vehicle_id:
         rospy.loginfo("Initializing %s (ego-vehicle)", vehicle_id)
         ego_vehicle = EgoVehicle(ros_node_comp.ego_vehicle_id, ros_node_comp.control_ego_vehicle)
-        # ego_vehicle.init_ego_car_control(ros_node_comp.control_from_gazebo, ros_node_comp.lane_change)
+
     else:
         rospack1 = RosPack()
         package_path = rospack1.get_path('hybrid_simulation')
@@ -290,6 +278,64 @@ def init_vehicle_model_and_spawn_gazebo(subs, vehicle_id):
         except rospy.ServiceException as e:
             rospy.logerr("Error in spawn %s -  %s", vehicle_id, e.message)
 
+def simulation_handler():
+    # this function takes care of executing the requested number of simulations
+    print('Entered simulation handler')
+    N_simulations = rospy.get_param('~simulation_repetitions')
+    simulation_duration = rospy.get_param('~simulation_duration')
+
+    # subscribe to the vehicles involved in the simulation
+    initialize_subscription_vehicles()
+    print('Initialization is finished!')
+
+    global simulation_index
+    for simulation_index in range(1,N_simulations + 1):
+        traci_controller.setting.step = 0
+
+        # set the initial position of the vehicles in the simulation
+        if simulation_index > 1:
+            randomize_state_vehicles()
+            print('vehicles have been repositioned')
+        pause()
+        # Parameter to control a frequency for pausing the simulation
+        dmaking_time_step = rospy.get_param('~dmaking_time_step')
+        sumo_time_step = rospy.get_param('~sumo_time_step')
+
+        # global variables
+        global paused_simulation # the simulation is paused while waiting for a decision of the planner
+        paused_simulation = False
+
+        global finished_simulation # the simulation is finished
+        finished_simulation = False
+
+        global pause_simulation_timer # timer that pauses the simulation
+
+        if simulation_index == 1:
+            tf_timer = rospy.Timer(rospy.Duration.from_sec(0.05), publish_tf_timer_callback)
+
+        run_timer = rospy.Timer(rospy.Duration.from_sec(sumo_time_step), run)
+        # pause_simulation_timer = rospy.Timer(rospy.Duration.from_sec(dmaking_time_step), dmaking_timer_callback, oneshot=True)
+
+        # rospy.loginfo("SUMO Interface -- Starting spinner")
+        # rospy.spin()
+
+        while not finished_simulation:
+            rospy.sleep(2.0)
+
+        # The simulation is finished: stop the timers
+        # tf_timer.shutdown()
+        run_timer.shutdown()
+        # pause_simulation_timer.shutdown()
+
+        paused_simulation = False
+        finished_simulation = False
+
+        print('A simulation is finished')
+        pause()
+
+    traci.close()
+    sys.stdout.flush()
+
 
 def get_options():
     opt_parser = optparse.OptionParser()
@@ -300,7 +346,6 @@ def get_options():
                           default=False, help="tell me what you are doing")
     optns, args = opt_parser.parse_args()
     return optns
-
 
 # this is the main entry point of this script
 if __name__ == "__main__":
@@ -314,9 +359,12 @@ if __name__ == "__main__":
     # this script has been called from the command line. It will start sumo as a
     # server, then connect and run
     if options.nogui:
-        sumoBinary = checkBinary('sumo')
+        sumoBinary = "sumo"
     else:
-        sumoBinary = checkBinary('sumo-gui')
+        sumoBinary = "sumo-gui"
+    #             sumoBinary = checkBinary('sumo')
+    # else:
+    #     sumoBinary = checkBinary('sumo-gui')
 
     traci_controller.setting.verbose = options.verbose
 
@@ -347,36 +395,10 @@ if __name__ == "__main__":
 
     sumo_config_file_path = ros_pack.get_path('hybrid_simulation') + "/sumo_files/" + sumo_config_file_name
 
+
     traci.start([sumoBinary, "-c", sumo_config_file_path,
                  "--collision.action", "none"], label="sim_sumo")
+    print('Started')
     traci.simulation.subscribe()
 
-    traci_controller.setting.step = 0
-
-    # Parameter to control a frequency for pausing the simulation
-    dmaking_time_step = rospy.get_param('~dmaking_time_step')
-
-    global ego_vehicle
-    global pause_simulation
-    global pause_simulation_timer
-    global simulation_time
-    global sumo_time_step
-
-    sumo_time_step = 0.05
-    simulation_time = 0.0
-    ego_vehicle = None
-    pause_simulation = False
-
-    initialize_subscription_vehicles()
-    print('Initialization is finished!')
-
-    rospy.Timer(rospy.Duration.from_sec(0.01), publish_tf_timer_callback)
-    rospy.Timer(rospy.Duration.from_sec(sumo_time_step), run)
-    # pause_simulation_timer = rospy.Timer(rospy.Duration.from_sec(dmaking_time_step),
-    #                                      dmaking_timer_callback, oneshot=True)
-    rospy.loginfo("SUMO Interface -- Starting spinner")
-
-    rospy.spin()
-
-    traci.close()
-    sys.stdout.flush()
+    simulation_handler()

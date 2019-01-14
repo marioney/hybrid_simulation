@@ -15,9 +15,6 @@ def generate_route_file_dmaking(route_file_path, n_scenario):
 
     random.seed(42)  # make tests reproducible
 
-        #     <vType accel="4.0" decel="6.0" id="ego-vehicle" length="4.1" minGap="2.0" maxSpeed="36.0" sigma="0.9"
-        # lcStrategic="0.0" lcSpeedGain="0.9" lcKeepRight="100.01"/>
-
     with open(route_file_path, "w") as routes:
 
         print("""<routes>
@@ -30,7 +27,7 @@ def generate_route_file_dmaking(route_file_path, n_scenario):
         lcStrategic="0.0" lcSpeedGain="0.9" lcKeepRight="100.01" />
         <vType accel="4.0" decel="6.0" id="Car_70" length="5.0" minGap="2.5" maxSpeed="19.4" sigma="0.9"
         lcStrategic="0.0" lcSpeedGain="0.9" lcKeepRight="100.01" />
-        <vType accel="4.0" decel="6.0" id="ego-vehicle" length="4.1" minGap="-10.0" maxSpeed="36.0" sigma="0.9"
+        <vType accel="4.0" decel="6.0" id="ego-vehicle" length="4.1" minGap="2.0" maxSpeed="36.0" sigma="0.9"
         lcStrategic="0.0" lcSpeedGain="0.9" lcKeepRight="100.01"/>
         <route id="route00" edges="e0-100 e100-200 e200-300 e300-400 e400-500 e500-3000"/>
         <route id="route01" edges="e100-200 e200-300 e300-400 e400-500 e500-3000"/>

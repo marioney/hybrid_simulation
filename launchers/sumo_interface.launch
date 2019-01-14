@@ -3,27 +3,29 @@
 
  <arg name="use_gazebo"/>
  <arg name="control_ego_vehicle"/>
- <!-- <arg name="control_from_gazebo" default="True"/> -->
- <!-- <arg name="lane_change" default="False"/> -->
  <arg name="route_file_name"/>
  <arg name="sumo_config_file_name"/>
  <arg name="ego_vehicle_name"/>
  <arg name="scenario_nr"/>
  <arg name="dmaking_time_step"/>
+ <arg name="sumo_time_step"/>
+ <arg name="simulation_repetitions"/>
+ <arg name="simulation_duration"/>
 
 
  ## Launch SUMO and interface
   <!-- The interface launches the SUMO simulator, play button needs to be manually click -->
   <node pkg="hybrid_simulation" type="control_other_vehicles.py" name="sumo_interface" output="screen">
-	 <param name="use_gazebo" value="$(arg use_gazebo)" />
-	 <param name="control_ego_vehicle" value="$(arg control_ego_vehicle)" />
-	 <!-- <param name="control_from_gazebo" value="$(arg control_from_gazebo)" /> -->
-	 <param name="route_file_name" value="$(arg route_file_name)" />
-	 <param name="sumo_config_file_name" value="$(arg sumo_config_file_name)" />
- 	 <param name="ego_vehicle_name" value="$(arg ego_vehicle_name)" />
- 	 <param name="n_scenario" value="$(arg scenario_nr)" />
- 	 <!-- <param name="lane_change" value="$(arg lane_change)" /> -->
- 	 <param name="dmaking_time_step" value="$(arg dmaking_time_step)" />
+    <param name="use_gazebo" value="$(arg use_gazebo)" />
+    <param name="control_ego_vehicle" value="$(arg control_ego_vehicle)" />
+    <param name="route_file_name" value="$(arg route_file_name)" />
+    <param name="sumo_config_file_name" value="$(arg sumo_config_file_name)" />
+    <param name="ego_vehicle_name" value="$(arg ego_vehicle_name)" />
+    <param name="n_scenario" value="$(arg scenario_nr)" />
+    <param name="dmaking_time_step" value="$(arg dmaking_time_step)" />
+    <param name="sumo_time_step" value="$(arg sumo_time_step)" />
+    <param name="simulation_repetitions" value="$(arg simulation_repetitions)" />
+    <param name="simulation_duration" value="$(arg simulation_duration)" />
   </node>
 
 </launch>

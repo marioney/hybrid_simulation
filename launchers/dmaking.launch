@@ -11,7 +11,7 @@
   <arg name="ego_vehicle_name" default="prius"/>
 
   <!-- Ego-vehicle initial pose -->
-  <arg name="init_pos_x" default="24.0"/>
+  <arg name="init_pos_x" default="-10.0"/>
   <arg name="init_pos_y" default="-2.0"/>
   <arg name="init_pos_z" default="0.5"/>
   <arg name="init_yaw" default="0.0"/>
@@ -19,18 +19,15 @@
   <!-- Use Gazebo for visualization? -->
   <arg name="use_gazebo" default="True"/>
   <!-- The vehicle will be controlled by the decision-making software? If auto, SUMO controls acceleration and lane changes -->
-  <arg name="control_ego_vehicle" default="longitudinal"/> <!-- options: longitudinal, lateral, auto -->
-  <!-- <arg name="control_from_gazebo" default="False"/> -->
-  <!-- <arg name="lane_change" default="False"/> -->
+  <arg name="control_ego_vehicle" default="auto"/> <!-- options: longitudinal, lateral, auto -->
 
   <arg name="route_file_name" default="grenoble.rou.xml"/>
   <arg name="sumo_config_file_name" default="grenoble.sumocfg"/>
   <arg name="scenario_nr" default="1"/>
   <arg name="dmaking_time_step" default="2.0"/>
-
-  <!-- Launch RVIZ ? -->
-  <!-- <arg name="launch_rviz" default="false"/>
-  <arg name="rvizconfig" default="$(find car_demo)/rviz/demo.rviz" /> -->
+  <arg name="sumo_time_step" default="0.05"/>  <!-- this value should agree with the one in grenoble.sumocfg -->
+  <arg name="simulation_repetitions" default="3"/>  <!-- number of times the simulation will be executed -->
+  <arg name="simulation_duration" default="10"/>  <!-- duration in seconds of each simulation -->
 
   ## Launch gazebo and world
   <!-- We use the logic in empty_world.launch, changing only the name of the world to be launched -->
@@ -54,19 +51,17 @@
  ## Launch SUMO and interface
   <!-- The interface launches the SUMO simulator, play button needs to be manually click -->
   <include file="$(find hybrid_simulation)/launchers/sumo_interface.launch">
-      <arg name="ego_vehicle_name" value="$(arg ego_vehicle_name)"/>
       <arg name="use_gazebo" value="$(arg use_gazebo)"/>
       <arg name="control_ego_vehicle" value="$(arg control_ego_vehicle)"/>
-      <!-- <arg name="control_from_gazebo" value="$(arg control_from_gazebo)"/> -->
       <arg name="route_file_name" value="$(arg route_file_name)"/>
       <arg name="sumo_config_file_name" value="$(arg sumo_config_file_name)"/>
+      <arg name="ego_vehicle_name" value="$(arg ego_vehicle_name)"/>
       <arg name="scenario_nr" value="$(arg scenario_nr)"/>
-      <!-- <arg name="lane_change" value="$(arg lane_change)"/> -->
       <arg name="dmaking_time_step" value="$(arg dmaking_time_step)"/>
+      <arg name="sumo_time_step" value="$(arg sumo_time_step)"/>
+      <arg name="simulation_repetitions" value="$(arg simulation_repetitions)"/>
+      <arg name="simulation_duration" value="$(arg simulation_duration)"/>
   </include>
-  <!-- ## Launch rviz
-  <group if="$(arg launch_rviz)">
-	<node pkg="rviz" type="rviz" name="zoe_rviz" args="-d $(arg rvizconfig)"/>
-  </group> -->
+
 
 </launch>
