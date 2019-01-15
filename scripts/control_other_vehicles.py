@@ -158,7 +158,7 @@ def initialize_subscription_vehicles():
             this_vehicle_data = {
                 'id': veh,
                 'speed': traci.vehicle.getSpeed(veh),
-                'max_speed': subs[65],
+                'max_speed': traci.vehicle.getMaxSpeed(veh),
                 'lane_position': traci.vehicle.getLanePosition(veh),
                 'position': traci.vehicle.getPosition(veh),
                 'angle': traci.vehicle.getAngle(veh),
@@ -173,6 +173,7 @@ def initialize_subscription_vehicles():
         # which requires an additional step execution to perform the moveToXY and setRouteID
 
         traci.simulationStep()
+        traci_controller.setting.step += 1
         # print('Initial_states_vehicles: ')
         # for elem in initial_states_vehicles:
         #     print(elem)
@@ -180,22 +181,46 @@ def initialize_subscription_vehicles():
 
 def randomize_state_vehicles():
     # This function randomizes the initial state of the vehicles, with variability depending on the randomize flag
-    print('Entered randomize state vehicles')
+    print('Entered randomize state vehicles\n')
 
-    for vehicle_info in initial_states_vehicles[::-1]:
-        print('Initial state for vehicle %s', vehicle_info['id'])
-        print(vehicle_info)
+
+    for vehicle_info in initial_states_vehicles:
+        print('Initial state for vehicle {0} **********'.format(vehicle_info['id']))
+        for key in vehicle_info:
+            print('{0}: {1}'.format(key,vehicle_info[key]))
+        print('\n')
+        
+    # set speed to zero and reposition the vehicles
+    for vehicle_info in initial_states_vehicles:
         this_vehicle_id = vehicle_info['id']
+        # set speed to zero:
+        traci.vehicle.setSpeed(this_vehicle_id, 0.0)
+        # reposition vehicle
         traci.vehicle.moveToXY(this_vehicle_id, vehicle_info['edge_id'], vehicle_info['lane_idx'],
         vehicle_info['position'][0], vehicle_info['position'][1], vehicle_info['angle'], 2)
-        traci.vehicle.setRouteID(this_vehicle_id, vehicle_info['route_id'])
+        # the route cannot be set here because the xy repositioning does not happen until the next step, and when 
+        # setting the route the first edge in the list has to be the one that the vehicle is at at the moment
+        # traci.vehicle.setRouteID(this_vehicle_id, vehicle_info['route_id'])      
 
+    # simulation step to perform the repositioning and stopping
+    print('Stopping vehicles and repositioning')
     traci.simulationStep()
 
     # Set route: changes the vehicle route to given edges list. The first edge in the list has to be the one that the vehicle is at at the moment.
-    # for vehicle_info in initial_states_vehicles[::-1]:
-    traci.vehicle.setRouteID(this_vehicle_id, vehicle_info['route_id'])
+    for vehicle_info in initial_states_vehicles:
+        this_vehicle_id = vehicle_info['id']
+        traci.vehicle.setRouteID(this_vehicle_id, vehicle_info['route_id'])
+    
+    # simulation step to reset route
     traci.simulationStep()
+    
+    # here we would set the speed to the initial value + noise
+    # also, reset the adequate control modes for all vehicles
+    print('Resetting initial speeds')
+    for vehicle_info in initial_states_vehicles:
+        traci.vehicle.setSpeed(this_vehicle_id, vehicle_info['speed'])       
+
+    # note that the reseted speed will be set when the new simulation starts
 
     print('check correct repositioning')
     for veh in vehicle_ids:
@@ -212,8 +237,11 @@ def randomize_state_vehicles():
             'lane_id':  traci.vehicle.getLaneID(veh),
             'lane_idx': traci.vehicle.getLaneIndex(veh)
         }
-        print(this_vehicle_data)
-    pause()
+        print('New state for vehicle {0} **********'.format(this_vehicle_data['id']))
+        for key in this_vehicle_data:
+            print('{0}: {1}'.format(key,this_vehicle_data[key]))
+        print('\n')
+
 
 def run(event):
     global paused_simulation
@@ -231,7 +259,6 @@ def run(event):
         # print("simulation_time: ", simulation_time)
 
         if simulation_time > simulation_duration:
-            print('The simulation has finished!')
             finished_simulation = True
 
 
@@ -293,14 +320,15 @@ def simulation_handler():
     print('Initialization is finished!')
 
     global simulation_index
-    for simulation_index in range(1,N_simulations + 1):
+
+    for simulation_index in range(1,N_simulations + 1):   
         traci_controller.setting.step = 0
 
         # set the initial position of the vehicles in the simulation
         if simulation_index > 1:
             randomize_state_vehicles()
             print('vehicles have been repositioned')
-        pause()
+
         # Parameter to control a frequency for pausing the simulation
         dmaking_time_step = rospy.get_param('~dmaking_time_step')
         sumo_time_step = rospy.get_param('~sumo_time_step')
@@ -317,6 +345,7 @@ def simulation_handler():
         if simulation_index == 1:
             tf_timer = rospy.Timer(rospy.Duration.from_sec(0.05), publish_tf_timer_callback)
 
+        print('Starting simulation...')
         run_timer = rospy.Timer(rospy.Duration.from_sec(sumo_time_step), run)
         # pause_simulation_timer = rospy.Timer(rospy.Duration.from_sec(dmaking_time_step), dmaking_timer_callback, oneshot=True)
 
@@ -324,7 +353,7 @@ def simulation_handler():
         # rospy.spin()
 
         while not finished_simulation:
-            rospy.sleep(2.0)
+            rospy.sleep(0.2)
 
         # The simulation is finished: stop the timers
         # tf_timer.shutdown()
@@ -334,8 +363,7 @@ def simulation_handler():
         paused_simulation = False
         finished_simulation = False
 
-        print('A simulation is finished')
-        pause()
+        print('The simulation has finished!\n')
 
     traci.close()
     sys.stdout.flush()

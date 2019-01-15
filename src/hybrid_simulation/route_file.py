@@ -42,7 +42,7 @@ def generate_route_file_dmaking(route_file_path, n_scenario):
             ego_vehicle_id = "prius"
 
         if n_scenario == 1:
-            print('    <vehicle id="car_1" type="Car_90" route="route00" depart="0" departLane="0" departPos="100" departSpeed="max"/>', file=routes)
+            # print('    <vehicle id="car_1" type="Car_90" route="route00" depart="0" departLane="0" departPos="80" departSpeed="max"/>', file=routes)
             print('    <vehicle id="%s" type="ego-vehicle" route="route00" depart="0" departLane="0" departPos="base" departSpeed="max" color="1,1,1"/>' % ego_vehicle_id, file=routes)
 
         if n_scenario == 2:
