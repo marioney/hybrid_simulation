@@ -202,7 +202,7 @@ def randomize_state_vehicles():
         traci.vehicle.setSpeed(this_vehicle_id, 0.0)
         # reposition vehicle
         traci.vehicle.moveToXY(this_vehicle_id, vehicle_info['edge_id'], vehicle_info['lane_idx'],
-        vehicle_info['position'][0], vehicle_info['position'][1], vehicle_info['angle'], 0)
+        vehicle_info['position'][0], vehicle_info['position'][1], vehicle_info['angle'], 2)
         # the route cannot be set here because the xy repositioning does not happen until the next step, and when 
         # setting the route the first edge in the list has to be the one that the vehicle is at at the moment
         # traci.vehicle.setRouteID(this_vehicle_id, vehicle_info['route_id'])      
