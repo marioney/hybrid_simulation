@@ -183,6 +183,8 @@ def randomize_state_vehicles():
     # This function randomizes the initial state of the vehicles, with variability depending on the randomize flag
     print('Entered randomize state vehicles\n')
 
+    global ego_vehicle
+
 
     for vehicle_info in initial_states_vehicles:
         print('Initial state for vehicle {0} **********'.format(vehicle_info['id']))
@@ -193,6 +195,9 @@ def randomize_state_vehicles():
     # set speed to zero and reposition the vehicles
     for vehicle_info in initial_states_vehicles:
         this_vehicle_id = vehicle_info['id']
+        # change speed mode to be controlled manually
+        # all checks off -> Speed Mode = 0
+        traci.vehicle.setSpeedMode(this_vehicle_id, 0)
         # set speed to zero:
         traci.vehicle.setSpeed(this_vehicle_id, 0.0)
         # reposition vehicle
@@ -216,19 +221,30 @@ def randomize_state_vehicles():
     
     # here we would set the speed to the initial value + noise
     # also, reset the adequate control modes for all vehicles
-    print('Resetting initial speeds')
+    print('Restoring initial speeds')
     for vehicle_info in initial_states_vehicles:
-        traci.vehicle.setSpeed(this_vehicle_id, vehicle_info['speed'])       
+        this_vehicle_id = vehicle_info['id']
+        traci.vehicle.setSpeed(this_vehicle_id, vehicle_info['speed']) 
 
-    # note that the reseted speed will be set when the new simulation starts
+    # simulation step to restore speed
+    traci.simulationStep()
 
-    print('check correct repositioning')
+    print('Restoring control modes')
+    for vehicle_info in initial_states_vehicles:
+        this_vehicle_id = vehicle_info['id']
+        if this_vehicle_id == 'prius':
+            ego_vehicle.init_ego_car_control(ros_node_comp.control_ego_vehicle)
+
+    # simulation step to restore control mode
+    traci.simulationStep()
+
+    print('\ncheck correct repositioning')
     for veh in vehicle_ids:
         subs = traci.vehicle.getSubscriptionResults(veh)
         this_vehicle_data = {
             'id': veh,
             'speed': traci.vehicle.getSpeed(veh),
-            'max_speed': subs[65],
+            'max_speed': traci.vehicle.getMaxSpeed(veh),
             'lane_position': traci.vehicle.getLanePosition(veh),
             'position': traci.vehicle.getPosition(veh),
             'angle': traci.vehicle.getAngle(veh),
@@ -241,6 +257,9 @@ def randomize_state_vehicles():
         for key in this_vehicle_data:
             print('{0}: {1}'.format(key,this_vehicle_data[key]))
         print('\n')
+
+    pause()
+
 
 
 def run(event):
@@ -260,6 +279,8 @@ def run(event):
 
         if simulation_time > simulation_duration:
             finished_simulation = True
+
+        print('ego-speed: {0:2f}'.format(traci.vehicle.getSpeed('prius')))
 
 
     elif not finished_simulation:

@@ -29,8 +29,6 @@ class EgoVehicle:
 
     # def init_ego_car_control(self, control_from_gazebo, lane_change=False):
     def init_ego_car_control(self, flag_external_control):
-
-        rospy.loginfo("Ego-vehicle departed")
         # Longitudinal mode
         # all checks off -> Speed Mode = 0
         # disable right of way check -> Speed Mode = 23
@@ -62,6 +60,7 @@ class EgoVehicle:
 
             # all checks on -> Speed Mode = 31
             traci.vehicle.setSpeedMode(self.ego_vehicle_id, 31)
+            traci.vehicle.setSpeed(self.ego_vehicle_id, -1) 
             # no automatic lane changes and no checks -> Lane Change Mode = 0
             traci.vehicle.setLaneChangeMode(self.ego_vehicle_id, 0)
 
@@ -71,6 +70,7 @@ class EgoVehicle:
 
             # all checks on -> Speed Mode = 31
             traci.vehicle.setSpeedMode(self.ego_vehicle_id, 31)
+            traci.vehicle.setSpeed(self.ego_vehicle_id, -1)
             # 1621 - Default change mode, all checks on
             traci.vehicle.setLaneChangeMode(self.ego_vehicle_id, 1621)
 
