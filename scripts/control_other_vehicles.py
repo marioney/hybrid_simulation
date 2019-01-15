@@ -40,6 +40,7 @@ import traci
 
 PI = 3.1415926535897
 traci_controller = TraciControls()
+vehicle_ids = []
 initial_states_vehicles = [] # list of dictionaries
 # each dictionary contains {id:'prius', speed: 35.84, max_speed: 36.0, pos: (20.32924471235345, -4.95), angle: 90.0, road_id: 'e0-100', lane_index: 0 }
 
@@ -65,7 +66,7 @@ def publish_tf_timer_callback(event):
 
     simulation_time = traci_controller.setting.step * rospy.get_param('~sumo_time_step')
 
-    for running_vehicle, subs in traci.vehicle.getSubscriptionResults().items():
+    for running_vehicle in vehicle_ids:
         if running_vehicle is not None:
             try:
                 result_sub = traci.vehicle.getSubscriptionResults(running_vehicle)
@@ -149,9 +150,11 @@ def initialize_subscription_vehicles():
                 # move_nodes.append((v, subs[tc.VAR_ROAD_ID], subs[tc.VAR_LANEPOSITION]))
                 if ros_node_comp.use_gazebo is True:
                     init_vehicle_model_and_spawn_gazebo(subs, v)
+                vehicle_ids.append(v)
 
         # save initial states
-        for veh, subs in traci.vehicle.getSubscriptionResults().items():
+        for veh in vehicle_ids:
+            subs = traci.vehicle.getSubscriptionResults(v)
             this_vehicle_data = {
                 'id': veh,
                 'speed': traci.vehicle.getSpeed(veh),
@@ -195,7 +198,8 @@ def randomize_state_vehicles():
     traci.simulationStep()
 
     print('check correct repositioning')
-    for veh, subs in traci.vehicle.getSubscriptionResults().items():
+    for veh in vehicle_ids:
+        subs = traci.vehicle.getSubscriptionResults(veh)
         this_vehicle_data = {
             'id': veh,
             'speed': traci.vehicle.getSpeed(veh),
