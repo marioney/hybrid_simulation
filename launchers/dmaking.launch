@@ -23,10 +23,10 @@
 
   <arg name="route_file_name" default="grenoble.rou.xml"/>
   <arg name="sumo_config_file_name" default="grenoble.sumocfg"/>
-  <arg name="scenario_nr" default="1"/>
+  <arg name="scenario_nr" default="2"/>
   <arg name="dmaking_time_step" default="2.0"/>
   <arg name="sumo_time_step" default="0.05"/>  <!-- this value should agree with the one in grenoble.sumocfg -->
-  <arg name="simulation_repetitions" default="3"/>  <!-- number of times the simulation will be executed -->
+  <arg name="simulation_repetitions" default="5"/>  <!-- number of times the simulation will be executed -->
   <arg name="simulation_duration" default="15"/>  <!-- duration in seconds of each simulation -->
 
   ## Launch gazebo and world

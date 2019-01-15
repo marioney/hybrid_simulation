@@ -202,7 +202,7 @@ def randomize_state_vehicles():
         traci.vehicle.setSpeed(this_vehicle_id, 0.0)
         # reposition vehicle
         traci.vehicle.moveToXY(this_vehicle_id, vehicle_info['edge_id'], vehicle_info['lane_idx'],
-        vehicle_info['position'][0], vehicle_info['position'][1], vehicle_info['angle'], 2)
+        vehicle_info['position'][0], vehicle_info['position'][1], vehicle_info['angle'], 0)
         # the route cannot be set here because the xy repositioning does not happen until the next step, and when 
         # setting the route the first edge in the list has to be the one that the vehicle is at at the moment
         # traci.vehicle.setRouteID(this_vehicle_id, vehicle_info['route_id'])      
@@ -234,6 +234,9 @@ def randomize_state_vehicles():
         this_vehicle_id = vehicle_info['id']
         if this_vehicle_id == 'prius':
             ego_vehicle.init_ego_car_control(ros_node_comp.control_ego_vehicle)
+        else:
+            traci.vehicle.setSpeedMode(this_vehicle_id, 31) # all checks on
+            traci.vehicle.setSpeed(this_vehicle_id, -1) 
 
     # simulation step to restore control mode
     traci.simulationStep()
@@ -257,9 +260,6 @@ def randomize_state_vehicles():
         for key in this_vehicle_data:
             print('{0}: {1}'.format(key,this_vehicle_data[key]))
         print('\n')
-
-    pause()
-
 
 
 def run(event):
