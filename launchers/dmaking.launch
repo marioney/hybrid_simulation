@@ -19,15 +19,15 @@
   <!-- Use Gazebo for visualization? -->
   <arg name="use_gazebo" default="True"/>
   <!-- The vehicle will be controlled by the decision-making software? If auto, SUMO controls acceleration and lane changes -->
-  <arg name="control_ego_vehicle" default="lateral"/> <!-- options: longitudinal, lateral, auto -->
+  <arg name="control_ego_vehicle" default="auto"/> <!-- options: longitudinal, lateral, auto -->
 
   <arg name="route_file_name" default="grenoble.rou.xml"/>
   <arg name="sumo_config_file_name" default="grenoble.sumocfg"/>
-  <arg name="scenario_nr" default="1"/>
+  <arg name="scenario_nr" default="3"/>
   <arg name="dmaking_time_step" default="2.0"/>
   <arg name="sumo_time_step" default="0.05"/>  <!-- this value should agree with the one in grenoble.sumocfg -->
   <arg name="simulation_repetitions" default="1"/>  <!-- number of times the simulation will be executed -->
-  <arg name="simulation_duration" default="30"/>  <!-- duration in seconds of each simulation -->
+  <arg name="simulation_duration" default="35"/>  <!-- duration in seconds of each simulation -->
 
   ## Launch gazebo and world
   <!-- We use the logic in empty_world.launch, changing only the name of the world to be launched -->
