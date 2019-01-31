@@ -59,8 +59,9 @@ class EgoVehicle:
             rospy.loginfo("Ego-vehicle: lateral control mode")
 
             # all checks on -> Speed Mode = 31
+            traci.vehicle.setSpeed(self.ego_vehicle_id, -1)
             traci.vehicle.setSpeedMode(self.ego_vehicle_id, 31)
-            traci.vehicle.setSpeed(self.ego_vehicle_id, -1) 
+             
             # no automatic lane changes and no checks -> Lane Change Mode = 0
             traci.vehicle.setLaneChangeMode(self.ego_vehicle_id, 0)
 
@@ -69,8 +70,9 @@ class EgoVehicle:
             rospy.loginfo("Ego-vehicle: auto control mode")
 
             # all checks on -> Speed Mode = 31
-            traci.vehicle.setSpeedMode(self.ego_vehicle_id, 31)
             traci.vehicle.setSpeed(self.ego_vehicle_id, -1)
+            traci.vehicle.setSpeedMode(self.ego_vehicle_id, 31)
+            
             # 1621 - Default change mode, all checks on
             traci.vehicle.setLaneChangeMode(self.ego_vehicle_id, 1621)
 

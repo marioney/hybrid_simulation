@@ -55,10 +55,12 @@ def generate_route_file_dmaking(route_file_path, n_scenario):
         else:
             ego_vehicle_id = "prius"
 
+        # Simple overtake scenario
         if n_scenario == 1:
-            print('    <vehicle id="car_1" type="Car_90" route="route00" depart="0" departLane="0" departPos="80" departSpeed="10"/>', file=routes)
-            print('    <vehicle id="%s" type="ego-vehicle" route="route00" depart="0" departLane="0" departPos="base" departSpeed="10" color="1,1,1"/>' % ego_vehicle_id, file=routes)
+            print('    <vehicle id="car_1" type="Car_70" route="route00" depart="0" departLane="0" departPos="1150" departSpeed="19" />', file=routes)
+            print('    <vehicle id="%s" type="ego-vehicle" route="route00" depart="0" departLane="0" departPos="1000" departSpeed="25" color="1,1,1"/>' % ego_vehicle_id, file=routes)
 
+        # Complex blocked scenario
         if n_scenario == 2:
             print('    <vehicle id="car_1" type="Car_70" route="route00" depart="0" departLane="0" departPos="1150" departSpeed="19" />', file=routes)
             print('    <vehicle id="car_2" type="Car_130" route="route00" depart="0" departLane="1" departPos="830" departSpeed="32" />', file=routes)

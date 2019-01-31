@@ -15,4 +15,3 @@ float32 velocity
 float32 max_vel
 int16 lane
 int16 signals
-
