@@ -46,9 +46,12 @@ initial_states_vehicles = [] # list of dictionaries
 
 def dmaking_timer_callback(event):
     global paused_simulation
+    global pause_simulation_timer
+
     if paused_simulation is False:
         rospy.loginfo("Waiting for decision")
         paused_simulation = True
+        pause_simulation_timer.shutdown()
 
 def publish_tf_timer_callback(event):
 
@@ -58,6 +61,7 @@ def publish_tf_timer_callback(event):
     global ego_vehicle
     global pause_simulation_timer
     global simulation_index
+    global tf_timer
 
     br = tf.TransformBroadcaster()
     vehicles_msg_array = VehicleStatusArray()
@@ -120,6 +124,11 @@ def publish_tf_timer_callback(event):
     vehicles_msg_array.time_step_duration = time_step_duration
 
     ros_node_comp.vehicle_status_pub.publish(vehicles_msg_array)
+
+    if waiting_for_decision:
+        # if a waiting_for_decision emssage has been sent, we stop broadcasting the states
+        tf_timer.shutdown()
+
 
 def pause():
 	programPause = raw_input("Press the <ENTER> key to continue...")
@@ -271,6 +280,7 @@ def run(event):
     global finished_simulation
     global ego_vehicle
     global pause_simulation_timer
+    global tf_timer
 
     simulation_duration = rospy.get_param('~simulation_duration')
 
@@ -289,10 +299,10 @@ def run(event):
 
 
     elif not finished_simulation:
-        rospy.loginfo("Waiting for decision")
         if ego_vehicle.resume_simulation is True:
             paused_simulation = False
             ego_vehicle.resume_simulation = False
+            tf_timer = rospy.Timer(rospy.Duration.from_sec(0.05), publish_tf_timer_callback)
             pause_simulation_timer = rospy.Timer(rospy.Duration.from_sec(rospy.get_param('~dmaking_time_step')),
                                                  dmaking_timer_callback, oneshot=True)
 
@@ -346,6 +356,7 @@ def simulation_handler():
     print('Initialization is finished!')
 
     global simulation_index
+    global tf_timer
 
     for simulation_index in range(1,N_simulations + 1):   
         traci_controller.setting.step = 0
@@ -369,10 +380,11 @@ def simulation_handler():
 
         global pause_simulation_timer # timer that pauses the simulation
 
-        if simulation_index == 1:
-            tf_timer = rospy.Timer(rospy.Duration.from_sec(0.05), publish_tf_timer_callback)
+        # if simulation_index == 1:
+        #     tf_timer = rospy.Timer(rospy.Duration.from_sec(0.05), publish_tf_timer_callback)
 
         print('Starting simulation...')
+        tf_timer = rospy.Timer(rospy.Duration.from_sec(0.05), publish_tf_timer_callback)
         run_timer = rospy.Timer(rospy.Duration.from_sec(sumo_time_step), run)
 
         # if not 'auto' mode: 
@@ -386,7 +398,7 @@ def simulation_handler():
             rospy.sleep(0.2)
 
         # The simulation is finished: stop the timers
-        # tf_timer.shutdown()
+        tf_timer.shutdown()
         run_timer.shutdown()
         if ros_node_comp.control_ego_vehicle == 'lateral' or ros_node_comp.control_ego_vehicle == 'longitudinal':
             pause_simulation_timer.shutdown()

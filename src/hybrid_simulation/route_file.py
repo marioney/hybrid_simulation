@@ -55,10 +55,19 @@ def generate_route_file_dmaking(route_file_path, n_scenario):
         else:
             ego_vehicle_id = "prius"
 
+        # Only ego-vehicle
+        if n_scenario == 0:
+            print('    <vehicle id="%s" type="ego-vehicle" route="route00" depart="0" departLane="0" departPos="800" departSpeed="25" color="1,1,1"/>' % ego_vehicle_id, file=routes)
+        
         # Simple overtake scenario
-        if n_scenario == 1:
+        elif n_scenario == 1:
             print('    <vehicle id="car_1" type="Car_70" route="route00" depart="0" departLane="0" departPos="1150" departSpeed="19" />', file=routes)
-            print('    <vehicle id="%s" type="ego-vehicle" route="route00" depart="0" departLane="0" departPos="1000" departSpeed="25" color="1,1,1"/>' % ego_vehicle_id, file=routes)
+            print('    <vehicle id="%s" type="ego-vehicle" route="route00" depart="0" departLane="0" departPos="800" departSpeed="25" color="1,1,1"/>' % ego_vehicle_id, file=routes)
+
+        # Simple blocked scenario
+        elif n_scenario == 1:
+            print('    <vehicle id="car_1" type="Car_70" route="route00" depart="0" departLane="0" departPos="1150" departSpeed="19" />', file=routes)
+            print('    <vehicle id="%s" type="ego-vehicle" route="route00" depart="0" departLane="0" departPos="800" departSpeed="25" color="1,1,1"/>' % ego_vehicle_id, file=routes)
 
         # Complex blocked scenario
         if n_scenario == 2:
