@@ -73,7 +73,7 @@ namespace gazebo
             }
             catch (tf2::TransformException ex)
             {
-                ROS_ERROR("vehicle: %s - %s", frame_id.c_str(), ex.what());
+                //ROS_ERROR("vehicle: %s - %s", frame_id.c_str(), ex.what());
                 continue;
             }
             //

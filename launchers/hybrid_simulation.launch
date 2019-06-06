@@ -18,7 +18,7 @@
 
   <!-- Launch RVIZ ? -->
 
-  <arg name="launch_rviz" default="true"/>
+  <arg name="launch_rviz" default="false"/>
   <arg name="rvizconfig" default="$(find car_demo)/rviz/demo.rviz" />
 
 

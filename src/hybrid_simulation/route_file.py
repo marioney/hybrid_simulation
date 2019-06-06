@@ -32,7 +32,7 @@ def generate_route_file(route_file_path, max_steps, p_we, p_ew, p_ns):
         <route id="routeZoe" edges="D10 D6 L6 L17 L11 L1 D1"/>
         <route id="route03" edges="N1 N2"/> """, file=routes)
         veh_nr = 0
-        for i in range(max_steps):
+        for i in range(2, max_steps):
             if random.uniform(0, 1) < p_we:
                 print('    <vehicle id="right_%i" type="Car1" route="route01" depart="%i" />'
                       % (veh_nr, i), file=routes)
@@ -59,7 +59,7 @@ def generate_route_file(route_file_path, max_steps, p_we, p_ew, p_ns):
             else:
                 ego_vehicle_id = "prius"
 
-            if i == 5:
+            if i == 30:
                     print('    <vehicle id="%s" type="ego-vehicle" route="routeZoe" depart="%i" color="1,1,1"/>'
                           % (ego_vehicle_id, i), file=routes)
                     veh_nr += 1

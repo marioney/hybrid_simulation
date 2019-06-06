@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+<launch>
+
+<arg name="robotname" default="prius"/>
+<arg name="launch_nodelet" default="true"/>
+<arg name="input_image_transport" default="raw" />
+<arg name="run_sensors" default="false" />
+<arg name="run_ground" default="true" />
+<arg name="run_cmcdot" default="true" />
+<arg name="run_risk" default="false" />
+<arg name="use_odom" default="false" />
+
+<arg name="grid_x_min" default="-28."/>
+<arg name="grid_x_max" default="28."/>
+<arg name="grid_y_min" default="-28."/>
+<arg name="grid_y_max" default="28."/>
+<arg name="x_min" default="$(eval grid_x_min-2.)"/>
+<arg name="x_max" default="$(eval grid_x_max+2.)"/>
+<arg name="y_min" default="$(eval grid_y_min-2.)"/>
+<arg name="y_max" default="$(eval grid_y_max+2.)"/>
+<arg name="resolution" default="0.1"/>
+<arg name="base_id" default="base_link"/>
+<arg name="disp" default="0"/>
+
+
+<include if="$(arg use_odom)" file="$(find my_launchers)/launch/odometry.launch"/>
+
+<group ns="$(arg robotname)">
+	 
+ <!-- <param name="~tf_prefix" value="$(arg robotname)" type="str"/> -->
+ <param name="grid_frame_ID" value="base_link" />
+
+ <include file="$(find my_launchers)/launch/nodelet_manager.launch">
+  <arg name="robotname" value="$(arg robotname)" />
+  <arg name="launch_nodelet" value="$(arg launch_nodelet)" />
+ </include> 
+
+	<!--<node pkg="nodelet" type="nodelet" name="cuda_pointcloud_grid" args="load cuda_pointcloud_grid/CudaPointcloudGridNodelet $(arg robotname)_nodelet" output="screen">-->
+
+	<node if="$(arg run_ground)" pkg="nodelet" type="nodelet" name="ground_estimator" args="load ground_estimator/GroundEstimatorNodelet $(arg robotname)_nodelet" output="screen">
+    <!-- <node name="ground_estimator" pkg="ground_estimator" type="ground_estimator_node" output="screen"> -->
+		<rosparam param="clouds">[
+{topic: 'velodyne_points', angle_min: -1.57079632679, angle_max: 1.57079632679, angle_resolution: 0.0174532925, confidence: 0.1, lambda: 0.05, hitvariance: 0.1, factor_occ_free: 30., compute_ground: true}
+   <!--{topic: 'lux_left', angle_min: -1.57079632679, angle_max: 1.57079632679, angle_resolution: 0.0174532925, confidence: 0.01, lambda: 0.05, hitvariance: 0.1, factor_occ_free: 30., compute_ground: true},
+{topic: 'lux_center', angle_min: -1.57079632679, angle_max: 1.57079632679, angle_resolution: 0.0174532925, confidence: 0.01, lambda: 0.05, hitvariance: 0.1, factor_occ_free: 30., compute_ground: true},
+{topic: 'lux_right', angle_min: -1.57079632679, angle_max: 1.57079632679, angle_resolution: 0.0174532925, confidence: 0.01, lambda: 0.05, hitvariance: 0.1, factor_occ_free: 30., compute_ground: true},
+{topic: 'lux_rear', angle_min: -1.57079632679, angle_max: 1.57079632679, angle_resolution: 0.0174532925, confidence: 0.01, lambda: 0.05, hitvariance: 0.1, factor_occ_free: 30., compute_ground: true}-->
+
+]
+</rosparam>
+        <!--<remap from="occ_grid" to="occ_grid"/>-->
+        <remap from="ground_marker" to="ground_marker"/>
+        <remap from="classified_cloud" to="classified_cloud"/>
+        <param name="base_frame_id" value="$(arg base_id)"/>
+        <param name="odom_frame_id" value="map"/>
+        <param name="alpha" value="0.5"/> <!-- smoothing parameter -->
+        <param name="beta" value="0.5"/> <!-- per point contribution parameter -->
+	<param name="gamma" value="0.1"/> <!-- temporal parameter -->
+        <param name="sigma_em" value="0.2"/> <!-- sigma for em step (outlier) -->	
+        <param name="obstacle_min_threshold" value=".1"/> <!-- minimal height from ground to consider a point as an obstacle -->	
+        <param name="obstacle_max_threshold" value="2.5"/> <!-- maximal height from ground to consider a point as an obstacle -->	
+        <param name="resolution" value="1"/> <!-- mesh resolution -->
+        <param name="xmin" value="$(arg x_min)"/> <!-- bounding box -->
+        <param name="xmax" value="$(arg x_max)"/> <!-- bounding box -->
+        <param name="ymin" value="$(arg y_min)"/> <!-- bounding box -->
+        <param name="ymax" value="$(arg y_max)"/> <!-- bounding box -->
+        <param name="footprint_xmin" value="-2."/> <!-- footprint -->
+        <param name="footprint_xmax" value="2."/> <!-- footprint -->
+        <param name="footprint_ymin" value="-1."/> <!-- footprint -->
+        <param name="footprint_ymax" value="1."/> <!-- footprint -->
+        <param name="footprint_elevation" value="0."/> <!-- footprint -->
+        <param name="nb_iter" value="20"/> <!-- nb iterations -->
+        <param name="grid_xmin" value="$(arg grid_x_min)"/>
+        <param name="grid_xmax" value="$(arg grid_x_max)"/>
+        <param name="grid_ymin" value="$(arg grid_y_min)"/>
+        <param name="grid_ymax" value="$(arg grid_y_max)"/>
+        <param name="grid_resolution" value="$(arg resolution)"/>
+        <param name="grid_angle_resolution" value="0.39269908169"/> <!-- 0.001396263 / 0.00436332312 / 0.00872664625 / 0.0174532925 / 0.04908738521 / 0.09817477042 / 0.39269908169-->
+		<param name="display_state_grid" value="false"/>
+  </node>
+
+
+
+  <node if="$(arg run_cmcdot)" pkg="nodelet" type="nodelet" name="cuda_cmcdot_nodelet" args="load cuda_cmcdot/cuda_cmcdot_nodelet $(arg robotname)_nodelet" output="screen">
+   <remap from="obs_grid" to="occ_grid"/>	
+   <param name="odom_frame_id" value="map" />
+   <param name="odom_origin_frame_id" value="base_link" />
+   <param name="nb_particles" value="262144" /> <!--8192 / 32768 / 65536 / 131072 / 262144-->
+
+   <rosparam param="prior_state">[0.0045,   0.0005,   0.9900,  0.0050]</rosparam> -->
+
+   <rosparam param="transition_matrix">[0.99900, 0.00009, 0.0000, 0.0001,
+                                        0.00009, 0.99900, 0.0000, 0.0009,
+                                        0.00090, 0.00090, 1.0000, 0.0090,
+                                        0.00001, 0.00001, 0.0000, 0.9900]</rosparam>
+
+   <rosparam param="coherence_matrix">[1.000, 0.100, 1.000,
+                                       1.000, 0.100, 1.000,
+                                       0.000, 0.000, 1.000,
+                                       0.010, 1.000, 1.000]</rosparam>
+
+	<param name="v_max" value="20." />     <!-- Max speed (m/s) -->
+	<param name="noise_pos" value="1." />   <!-- constant noise for the position (m) -->
+	<param name="noise_v" value="1." />   <!-- Speed update noise (acceleration) (m/s*s) -->
+	<param name="object_threshold" value="8." />   <!-- minimal object weight -->
+	<param name="static_sigma" value="0.1" />   <!--  -->
+	<param name="refine_odom" value="false" />   <!-- refine odometry -->
+	<param name="display_mask" value="$(arg disp)"/>"  <!-- 3 to see window -->
+  </node>
+
+  <!--<node if="$(arg run_cmcdot)" name="target2marker" pkg="visualization_utils" type="target2marker.py" output="screen"/>-->
+  <!--<node if="$(arg run_cmcdot)" name="velocity2marker" pkg="visualization_utils" type="velocity2marker.py" output="screen"/>-->
+  
+  <rosparam command="load" file="$(find my_launchers)/calibration/footprint.yaml"/>
+  
+</group>
+</launch>

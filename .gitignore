@@ -1,0 +1,6 @@
+# Ignore VIM files
+.*.sw?
+*.pyc
+*.idea
+venv/
+.out

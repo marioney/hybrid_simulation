@@ -23,7 +23,7 @@ try:
         __file__), '..', '..', '..', '..', "tools"))  # tutorial in tests
     sys.path.append(os.path.join(os.environ.get("SUMO_HOME", os.path.join(
         os.path.dirname(__file__), "..", "..", "..")), "tools"))  # tutorial in docs
-    from sumolib import checkBinary  # noqa
+    from sumolib import checkBinary
 except ImportError:
     sys.exit(
         "please declare environment variable 'SUMO_HOME'"
@@ -59,7 +59,7 @@ def publish_tf_timer_callback(event):
     vehicles_msg_array.header.stamp = rospy.Time.now()
     vehicles_msg_array.header.frame_id = "world"
 
-    for running_vehicle, subs in traci.vehicle.getSubscriptionResults().items():
+    for running_vehicle, subs in traci.vehicle.getAllSubscriptionResults().items():
         if running_vehicle is not None:
             try:
                 result_sub = traci.vehicle.getSubscriptionResults(running_vehicle)
@@ -95,12 +95,14 @@ def publish_tf_timer_callback(event):
                     vehicle_msg.lane = v_lane_id
                     vehicle_msg.signals = v_signals
                     vehicles_msg_array.VehiclesDetected.append(vehicle_msg)
-                    if running_vehicle == ego_vehicle.ego_vehicle_id:
-                        # rospy.loginfo("Control egovehicle")
-                        if ros_node_comp.use_gazebo is True:
-                            # rospy.loginfo("Use Gazebo True")
-                            if ros_node_comp.control_from_gazebo is False:
-                                ego_vehicle.set_position_in_gazebo(vehicle_msg)
+                    if ego_vehicle is not None:
+                        if running_vehicle == ego_vehicle.ego_vehicle_id:
+                            # rospy.loginfo("Control egovehicle")
+                            if ros_node_comp.use_gazebo is True:
+                                # rospy.loginfo("Use Gazebo True")
+                                if ros_node_comp.control_from_gazebo is False:
+                                    ego_vehicle.set_position_in_gazebo(vehicle_msg)
+
     ros_node_comp.vehicle_status_pub.publish(vehicles_msg_array)
 
 
@@ -124,7 +126,7 @@ def run(event):
                         ego_vehicle.read_position_from_gazebo()
 
         move_nodes = []
-        for veh, subs in traci.vehicle.getSubscriptionResults().items():
+        for veh, subs in traci.vehicle.getAllSubscriptionResults().items():
             move_nodes.append(
                 (veh, subs[tc.VAR_ROAD_ID], subs[tc.VAR_LANEPOSITION]))
 
@@ -239,9 +241,9 @@ if __name__ == "__main__":
     # this script has been called from the command line. It will start sumo as a
     # server, then connect and run
     if options.nogui:
-        sumoBinary = checkBinary('sumo')
+        sumoBinary = checkBinary("sumo")
     else:
-        sumoBinary = checkBinary('sumo-gui')
+        sumoBinary = checkBinary("sumo-gui")
 
     traci_controller.setting.verbose = options.verbose
 
@@ -269,7 +271,7 @@ if __name__ == "__main__":
 
     if n_scenario == 0:
         p_we = 50. / 60
-        p_ew = 0. / 60
+        p_ew = 50. / 60
         p_ns = 0. / 60
         max_steps = 200
         generate_route_file(route_file_path, max_steps, p_we, p_ew, p_ns)
@@ -293,7 +295,7 @@ if __name__ == "__main__":
     traci_controller.setting.step = 0
 
     # we start with phase 2 where EW has green
-    #traci.trafficlight.setPhase("911", 2)
+    # traci.trafficlight.setPhase("911", 2)
 
     global ego_vehicle
 

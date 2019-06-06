@@ -1,9 +1,9 @@
 #ifndef SUMO_WORLD_PLUGIN_H
 #define SUMO_WORLD_PLUGIN_H
 
-#include <gazebo-8/gazebo/common/Plugin.hh>
-#include <gazebo-8/gazebo/physics/physics.hh>
-#include <gazebo-8/gazebo/util/system.hh>
+#include <gazebo-9/gazebo/common/Plugin.hh>
+#include <gazebo-9/gazebo/physics/physics.hh>
+#include <gazebo-9/gazebo/util/system.hh>
 #include <ros/ros.h>
 #include <tf2_ros/transform_listener.h>
 
