@@ -16,6 +16,14 @@
   <arg name="init_pos_z" default="0.5"/>
   <arg name="init_yaw" default="3.14159"/>
 
+  <arg name="use_gazebo" default="True"/>
+  <arg name="control_ego_vehicle" default="True"/>
+  <arg name="control_from_gazebo" default="False"/>
+  <arg name="route_file_name" default="network_traci.rou.xml"/>
+  <arg name="sumo_config_file_name" default="network.sumocfg"/>
+
+  <arg name="scenario_nr" default="4"/>
+
   <!-- Launch RVIZ ? -->
 
   <arg name="launch_rviz" default="false"/>

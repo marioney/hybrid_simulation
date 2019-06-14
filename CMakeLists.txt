@@ -61,6 +61,7 @@ add_message_files(
    ChangeLane.msg
    SetSpeed.msg
    VehicleStatusArray.msg
+   Observations.msg
  )
 
 ## Generate services in the 'srv' folder

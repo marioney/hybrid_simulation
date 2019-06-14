@@ -108,8 +108,8 @@
 	<param name="display_mask" value="$(arg disp)"/>"  <!-- 3 to see window -->
   </node>
 
-  <!--<node if="$(arg run_cmcdot)" name="target2marker" pkg="visualization_utils" type="target2marker.py" output="screen"/>-->
-  <!--<node if="$(arg run_cmcdot)" name="velocity2marker" pkg="visualization_utils" type="velocity2marker.py" output="screen"/>-->
+  <node if="$(arg run_cmcdot)" name="target2marker" pkg="visualization_utils" type="target2marker.py" output="screen"/>
+  <node if="$(arg run_cmcdot)" name="velocity2marker" pkg="visualization_utils" type="velocity2marker.py" output="screen"/>
   
   <rosparam command="load" file="$(find my_launchers)/calibration/footprint.yaml"/>
   

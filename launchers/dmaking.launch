@@ -22,7 +22,7 @@
   <arg name="route_file_name" default="dmaking.rou.xml"/>
   <arg name="sumo_config_file_name" default="dmaking.sumocfg"/>
 
-  <arg name="scenario_nr" default="5"/>
+  <arg name="scenario_nr" default="4"/>
 
 
   <!-- Launch RVIZ ? -->
@@ -30,6 +30,8 @@
   <arg name="launch_rviz" default="true"/>
   <arg name="rvizconfig" default="$(find car_demo)/rviz/demo.rviz" />
 
+  <!-- Launch CMCDOT ? -->
+  <arg name="launch_cmcdot" default="true"/>
 
   ## Launch gazebo and world
 
@@ -64,6 +66,17 @@
 
 
   </include>
+
+
+  ## Launch CMCDOT for prius
+   <group if="$(arg launch_cmcdot)">
+     <include file="$(find hybrid_simulation)/launchers/cmcdot_prius.launch">
+     </include>
+<!-- 
+     <node pkg="hybrid_simulation" type="get_cmcdot_observations.py" name="cmcdot_observations" output="screen">
+     </node>
+ -->    
+   </group>
 
   ## Launch rviz
   <group if="$(arg launch_rviz)">

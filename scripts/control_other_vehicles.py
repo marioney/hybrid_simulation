@@ -68,40 +68,46 @@ def publish_tf_timer_callback(event):
                 result_sub = None
 
             if result_sub is not None:
-                # print(result_sub)
                 v_position = result_sub.get(tc.VAR_POSITION, None)
                 v_angle = result_sub.get(tc.VAR_ANGLE, None)
                 v_max_vel = result_sub.get(tc.VAR_MAXSPEED, None)
                 v_velocity = result_sub.get(tc.VAR_SPEED, None)
                 v_lane_id = result_sub.get(tc.VAR_LANE_INDEX, None)
                 v_signals = result_sub.get(tc.VAR_SIGNALS, None)
+                # print(result_sub)
+                if v_position is None \
+                        or v_angle is None \
+                        or v_max_vel is None \
+                        or v_velocity is None \
+                        or v_lane_id is None \
+                        or v_signals is None:
+                    continue
 
-                if v_angle is not None and v_position is not None:
-                    v_angle = 360 - v_angle
-                    # rospy.loginfo("Vehicle %s - Pos_x: %.2f Pos_y: %.2f Angle: %.2f rads: %.2f",
-                    #               running_vehicle, v_position[0], v_position[0], v_angle, radians(v_angle))
-                    br.sendTransform((v_position[0], v_position[1], 0),
-                                     tf.transformations.quaternion_from_euler(0, 0, radians(v_angle)),
-                                     rospy.Time.now(),
-                                     running_vehicle,
-                                     "world")
-                    vehicle_msg = VehicleStatus()
-                    vehicle_msg.vehicle_id = running_vehicle
-                    vehicle_msg.pos_x = v_position[0]
-                    vehicle_msg.pos_y = v_position[1]
-                    vehicle_msg.heading = radians(v_angle)
-                    vehicle_msg.velocity = v_velocity
-                    vehicle_msg.max_vel = v_max_vel
-                    vehicle_msg.lane = v_lane_id
-                    vehicle_msg.signals = v_signals
-                    vehicles_msg_array.VehiclesDetected.append(vehicle_msg)
-                    if ego_vehicle is not None:
-                        if running_vehicle == ego_vehicle.ego_vehicle_id:
-                            # rospy.loginfo("Control egovehicle")
-                            if ros_node_comp.use_gazebo is True:
-                                # rospy.loginfo("Use Gazebo True")
-                                if ros_node_comp.control_from_gazebo is False:
-                                    ego_vehicle.set_position_in_gazebo(vehicle_msg)
+                v_angle = 360 - v_angle
+                # rospy.loginfo("Vehicle %s - Pos_x: %.2f Pos_y: %.2f Angle: %.2f rads: %.2f",
+                #               running_vehicle, v_position[0], v_position[0], v_angle, radians(v_angle))
+                br.sendTransform((v_position[0], v_position[1], 0),
+                                 tf.transformations.quaternion_from_euler(0, 0, radians(v_angle)),
+                                 rospy.Time.now(),
+                                 running_vehicle,
+                                 "world")
+                vehicle_msg = VehicleStatus()
+                vehicle_msg.vehicle_id = running_vehicle
+                vehicle_msg.pos_x = v_position[0]
+                vehicle_msg.pos_y = v_position[1]
+                vehicle_msg.heading = radians(v_angle)
+                vehicle_msg.velocity = v_velocity
+                vehicle_msg.max_vel = v_max_vel
+                vehicle_msg.lane = v_lane_id
+                vehicle_msg.signals = v_signals
+                vehicles_msg_array.VehiclesDetected.append(vehicle_msg)
+                if ego_vehicle is not None:
+                    if running_vehicle == ego_vehicle.ego_vehicle_id:
+                        # rospy.loginfo("Control egovehicle")
+                        if ros_node_comp.use_gazebo is True:
+                            # rospy.loginfo("Use Gazebo True")
+                            if ros_node_comp.control_from_gazebo is False:
+                                ego_vehicle.set_position_in_gazebo(vehicle_msg)
 
     ros_node_comp.vehicle_status_pub.publish(vehicles_msg_array)
 
