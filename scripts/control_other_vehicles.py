@@ -150,21 +150,31 @@ def run(event):
                 if ros_node_comp.use_gazebo is True:
                     gazebo_synchro(subs, v)
 
-            if ros_node_comp.use_gazebo is True:
-                arrived = traci.simulation.getArrivedIDList()
-                if arrived is not None:
-                    # print("step", traci_controller.setting.step, " departed >", departed)
-                    for item_name in arrived:
-                        rospy.loginfo("Deleting model: %s", item_name)
-                        if ego_vehicle is not None:
-                            if item_name == ego_vehicle.ego_vehicle_id:
-                                rospy.loginfo("Not Deleting model: %s", item_name)
-                                continue
-                        try:
-                            ros_node_comp.delete_model(item_name)
-                            rospy.loginfo("Deleting model OK!")
-                        except rospy.ServiceException as e:
-                            rospy.logerr("Delete Service call failed: %s", e.message)
+            # if ros_node_comp.use_gazebo is True:
+            # if ros_node_comp.use_gazebo is False:
+            arrived = traci.simulation.getArrivedIDList()
+            delete_all_vehicles = False
+            if arrived is not None:
+                for item_name in arrived:
+                    # rospy.loginfo("Deleting model: %s", item_name)
+                    if item_name == "prius":
+                        rospy.loginfo("Not Deleting model: %s", item_name)
+                        delete_all_vehicles = True
+                        continue
+                        # if ego_vehicle is not None:
+                        #     if item_name == ego_vehicle.ego_vehicle_id:
+                        #
+                        #         traci.close()
+                        #
+                    gazebo_delete_veh(item_name)
+            if delete_all_vehicles is True:
+                rospy.loginfo("Deleting all remaining vehicles")
+                for v_name, subs in traci.vehicle.getAllSubscriptionResults().items():
+                    gazebo_delete_veh(v_name)
+                    # ros_node_comp.delete_model(v_name)
+                rospy.loginfo("Bye Bye !!")
+                traci.close()
+                rospy.signal_shutdown("End sim")
 
         for vehicle_id, edge, pos in move_nodes:
             traci_controller.check_initial_position(vehicle_id, edge, pos)
@@ -187,6 +197,14 @@ def run(event):
         traci_controller.setting.step += 1
 
 
+def gazebo_delete_veh(vehicle_id):
+    try:
+        ros_node_comp.delete_model(vehicle_id)
+        rospy.loginfo("Deleting model %s  OK!", vehicle_id)
+    except rospy.ServiceException as e:
+        rospy.logerr("Delete Service call failed: %s", e.message)
+
+
 def gazebo_synchro(subs, vehicle_id):
 
     global ego_vehicle
@@ -201,12 +219,12 @@ def gazebo_synchro(subs, vehicle_id):
         package_path = rospack1.get_path('hybrid_simulation')
         file_xml = open(package_path + "/sdf/models/car/car_model.sdf")
         xml_string = file_xml.read()
-        rospy.loginfo("Spawning model: %s", vehicle_id)
+        # rospy.loginfo("Spawning model: %s", vehicle_id)
         v_position = subs.get(tc.VAR_POSITION, None)
         v_angle = subs.get(tc.VAR_ANGLE, None)
         v_angle_r = radians(360 - v_angle)
-        rospy.loginfo("Position: %.2f - %.2f ", v_position[0], v_position[1])
-        rospy.loginfo("Ange: %.2f - %.2f ", v_angle, v_angle_r)
+        # rospy.loginfo("Position: %.2f - %.2f ", v_position[0], v_position[1])
+        # rospy.loginfo("Ange: %.2f - %.2f ", v_angle, v_angle_r)
         orientation = tf.transformations.quaternion_from_euler(0,
                                                                0,
                                                                v_angle_r)
@@ -276,11 +294,13 @@ if __name__ == "__main__":
         n_scenario = 0
 
     if n_scenario == 0:
-        p_we = 50. / 60
-        p_ew = 50. / 60
-        p_ns = 0. / 60
+        p_we = 0.5
+        p_ew = 0.25
+        # p_we = 1
+        # p_ew = 1
+        # p_ns = 0.0 / 100
         max_steps = 200
-        generate_route_file(route_file_path, max_steps, p_we, p_ew, p_ns)
+        generate_route_file(route_file_path, max_steps, p_we, p_ew, 0.0)
     else:
         generate_route_file_dmaking(route_file_path, n_scenario)
 
@@ -293,9 +313,12 @@ if __name__ == "__main__":
         sumo_config_file_name = "network.sumocfg"
 
     sumo_config_file_path = ros_pack.get_path('hybrid_simulation') + "/sumo_files/" + sumo_config_file_name
+    sumo_ouput_file_path = ros_pack.get_path('hybrid_simulation') + "/sumo_files/tripinfo.xml"
 
     traci.start([sumoBinary, "-c", sumo_config_file_path,
-                 "--collision.action", "none"], label="sim_sumo")
+                 "--collision.action", "none", "--start",
+                 "--output-prefix", "TIME",
+                 "--tripinfo-output", sumo_ouput_file_path], label="sim_sumo")
     traci.simulation.subscribe()
 
     traci_controller.setting.step = 0
@@ -307,8 +330,8 @@ if __name__ == "__main__":
 
     ego_vehicle = None
 
-    rospy.Timer(rospy.Duration.from_sec(0.05), publish_tf_timer_callback)
-    rospy.Timer(rospy.Duration.from_sec(0.05), run)
+    rospy.Timer(rospy.Duration.from_sec(0.1), publish_tf_timer_callback)
+    rospy.Timer(rospy.Duration.from_sec(0.1), run)
     rospy.loginfo("SUMO Interface -- Starting spinner")
 
     rospy.spin()
