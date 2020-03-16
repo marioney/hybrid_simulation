@@ -1,7 +1,7 @@
 hybrid_simulation package
-====== 
- This code presents an open source tool for simulating autonomous vehicles in complex, high traffic, scenarios. 
- 
+======
+ This code presents an open source tool for simulating autonomous vehicles in complex, high traffic, scenarios.
+
  The hybrid simulation fully integrates and synchronizes SUMO a microscopic, multi-modal traffic simulator and GAZEBO a complex 3D simulator.
 
 ## Video
@@ -14,9 +14,9 @@ Experiments for the hybrid simulation tool in a merge scenario with very high tr
 
 The hybrid simulation tested on the following software
 
-* Ubuntu 16.04
-* ROS Kinetic
-* Gazebo version 8.6.0
+* Ubuntu 18.04
+* ROS Melodic
+* Gazebo version 9.0.0
 * SUMO Version 0.32.0
 
 All of them can be installed usin the standard installation process.
@@ -35,16 +35,16 @@ The code compiles only using *catkin_make*.
  * Run ```roslaunch hybrid_simulation hybrid_simulation.launch```
  * Rviz is going to launch. You can enable the images (cameras)
  * Wait till everything is launched and loaded in Gazebo and start the hybrid simulation by clicking the play button in SUMO.
- 
+
 ## Executables and libraries
 
 This package contains one executable for interfacing with SUMO and one Gazebo plugin.
 
 ### Gazebo plugin
 
-The gazebo plugin SumoWorldPlugin is in charge of controlling the position of the vehicles in gazebo. 
+The gazebo plugin SumoWorldPlugin is in charge of controlling the position of the vehicles in gazebo.
 
-It needs to be added to the gazebo world. This is done by adding the following lines to the gazebo world file. 
+It needs to be added to the gazebo world. This is done by adding the following lines to the gazebo world file.
 
 
 ```
@@ -61,7 +61,7 @@ This plugin controls the position of all additional vehicles. It has only one  p
 
 The *control_other_vehicles.py* executable is a standalone executable that interfaces with SUMO and controls the execution of the traffic simulation, and it allows the message passing towards Gazebo.
 
-## Launch files. 
+## Launch files.
 
 It is suggested to run the launch files than to run the bin files
 
@@ -78,9 +78,9 @@ Source code for the Gazebo plugin
 Main source for the SUMO control interface
 #### src / hybrid_simulation / ego_vehicle.py
 Source code for the EgoVehicle class: sets the status of ego-vehicle in SUMO with the values from Gazebo
-#### src / hybrid_simulation / route_file.py 
+#### src / hybrid_simulation / route_file.py
 Source code for the generation of the SUMO route file *network_traci.rou.xml*
-#### src / hybrid_simulation / traci_controls.py 
+#### src / hybrid_simulation / traci_controls.py
 Source code for auxiliary classes to control and interface with the simulation.
 
 #### sumo_files / network.sumocfg
@@ -89,18 +89,11 @@ Simulation and overall configuration file for the SUMO simulation.
 Description of the scenario, roads, intersections and other elements. It was created using the NETEDIT tool included in the SUMO installation.
 #### sumo_files / network.det.xml
 Definition of a detector to control an intelligent traffic light.
-#### launchers 
-Different lauchers detailed above. 
+#### launchers
+Different lauchers detailed above.
 #### meshes / Car.dae
 Mesh file for the car model used for all additional vehicles.
 #### sdf / models /car / car_model.sdf
 SDF file for the car model used for all additional vehicles.
 #### worlds / roads.world
 World file, with the scenario and Roads description for Gazebo. Includes the SumoWorldPlugin.
-
-
-
-
-
-
-
