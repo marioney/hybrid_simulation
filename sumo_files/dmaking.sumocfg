@@ -7,10 +7,10 @@
     </input>
     <time>
         <begin value="0"/>
-        <step-length value="0.05"/>
+        <step-length value="0.01"/>
     </time>
     <time-to-teleport value="-1"/>
-    <lanechange.duration value="1.5"/>
-    <!--<lateral-resolution value="0.2"/>-->
+    <!--<lanechange.duration value="1.5"/>-->
+    <lateral-resolution value="0.2"/>
 </configuration>
  
