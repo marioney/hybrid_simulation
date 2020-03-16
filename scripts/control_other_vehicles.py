@@ -59,7 +59,7 @@ def publish_tf_timer_callback(event):
     vehicles_msg_array.header.stamp = rospy.Time.now()
     vehicles_msg_array.header.frame_id = "world"
 
-    for running_vehicle, subs in traci.vehicle.getAllSubscriptionResults().items():
+    for running_vehicle, subs in traci.vehicle.getSubscriptionResults().items():
         if running_vehicle is not None:
             try:
                 result_sub = traci.vehicle.getSubscriptionResults(running_vehicle)
@@ -132,7 +132,7 @@ def run(event):
                         ego_vehicle.read_position_from_gazebo()
 
         move_nodes = []
-        for veh, subs in traci.vehicle.getAllSubscriptionResults().items():
+        for veh, subs in traci.vehicle.getSubscriptionResults().items():
             move_nodes.append(
                 (veh, subs[tc.VAR_ROAD_ID], subs[tc.VAR_LANEPOSITION]))
 
