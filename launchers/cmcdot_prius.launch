@@ -10,10 +10,10 @@
 <arg name="run_risk" default="false" />
 <arg name="use_odom" default="false" />
 
-<arg name="grid_x_min" default="-28."/>
-<arg name="grid_x_max" default="28."/>
-<arg name="grid_y_min" default="-28."/>
-<arg name="grid_y_max" default="28."/>
+<arg name="grid_x_min" default="-14."/>
+<arg name="grid_x_max" default="14."/>
+<arg name="grid_y_min" default="-10."/>
+<arg name="grid_y_max" default="10."/>
 <arg name="x_min" default="$(eval grid_x_min-2.)"/>
 <arg name="x_max" default="$(eval grid_x_max+2.)"/>
 <arg name="y_min" default="$(eval grid_y_min-2.)"/>

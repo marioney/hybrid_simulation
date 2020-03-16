@@ -18,7 +18,7 @@
 
   <arg name="use_gazebo" default="True"/>
   <arg name="control_ego_vehicle" default="True"/>
-  <arg name="control_from_gazebo" default="False"/>
+  <arg name="control_from_gazebo" default="True"/>
   <arg name="route_file_name" default="network_traci.rou.xml"/>
   <arg name="sumo_config_file_name" default="network.sumocfg"/>
 

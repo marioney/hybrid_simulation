@@ -4,7 +4,9 @@
   ## Launcher arguments
 
   <!-- Path to world file -->
-  <arg name="world_file" default="$(find hybrid_simulation)/worlds/dmaking.world"/>
+  <arg name="world_file" default="$(find hybrid_simulation)/worlds/icra.world"/>
+  <!-- Show gazebo gui -->
+  <arg name="gz_gui" default="true"/>
 
   <!-- Path to ego-vehicle model -->
   <arg name="ego_vehicle_model" default="$(find prius_description)/urdf/prius.urdf"/>
@@ -19,25 +21,32 @@
   <arg name="use_gazebo" default="True"/>
   <arg name="control_ego_vehicle" default="True"/>
   <arg name="control_from_gazebo" default="False"/>
-  <arg name="route_file_name" default="dmaking.rou.xml"/>
-  <arg name="sumo_config_file_name" default="dmaking.sumocfg"/>
+  <arg name="route_file_name" default="icra.rou.xml"/>
+  <arg name="sumo_config_file_name" default="icra.sumocfg"/>
 
-  <arg name="scenario_nr" default="4"/>
+  <arg name="scenario_nr" default="0"/>
 
 
   <!-- Launch RVIZ ? -->
 
-  <arg name="launch_rviz" default="true"/>
+  <arg name="launch_rviz" default="True"/>
   <arg name="rvizconfig" default="$(find car_demo)/rviz/demo.rviz" />
 
   <!-- Launch CMCDOT ? -->
-  <arg name="launch_cmcdot" default="true"/>
+  <arg name="launch_cmcdot" default="True"/>
+  <!-- Launch CMCDOT Observations -->
+  <arg name="run_cmcdot_observations" default="True"/>
+    <!-- Launch run control_ego_vehicle -->
+   <arg name="run_control_ego_vehicle" default="True"/>
+
 
   ## Launch gazebo and world
 
   <!-- We use the logic in empty_world.launch, changing only the name of the world to be launched -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
     <arg name="world_name" value="$(arg world_file)"/>
+    <arg name="gui" value="$(arg gz_gui)"/>
+
     <!-- more default parameters can be changed here -->
   </include>
 
@@ -63,8 +72,8 @@
       <arg name="route_file_name" value="$(arg route_file_name)"/>
       <arg name="sumo_config_file_name" value="$(arg sumo_config_file_name)"/>
       <arg name="scenario_nr" value="$(arg scenario_nr)"/>
-
-
+      <arg name="run_cmcdot_observations" value="$(arg run_cmcdot_observations)"/>
+      <arg name="run_control_ego_vehicle" value="$(arg run_control_ego_vehicle)"/>
   </include>
 
 
