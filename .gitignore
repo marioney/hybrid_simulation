@@ -3,4 +3,6 @@
 *.pyc
 *.idea
 venv/
-.out
+*.out
+*tripinfo.xml
+*.rou.xml
