@@ -276,6 +276,23 @@
           </script>
         </material>
       </visual>
+      <visual name='visual_16'>
+        <pose>175.0 103.3 0 0 0 0</pose>
+        <cast_shadows>false</cast_shadows>
+        <geometry>
+          <plane>
+            <normal>0 0 1</normal>
+            <size>50 6.6</size>
+          </plane>
+        </geometry>
+        <material>
+          <script>
+            <uri>model://grass_plane/materials/scripts</uri>
+            <uri>model://grass_plane/materials/textures</uri>
+            <name>vrc/grass</name>
+          </script>
+        </material>
+      </visual>
     </link>
   </model>
 </sdf>
