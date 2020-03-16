@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<launch>
+
+  ## Launcher arguments
+
+  <!-- Path to world file -->
+  <arg name="world_file" default="$(find hybrid_simulation)/worlds/icra.world"/>
+  <!-- Show gazebo gui -->
+  <arg name="gz_gui" default="true"/>
+
+  <!-- Path to ego-vehicle model -->
+  <arg name="ego_vehicle_model" default="$(find prius_description)/urdf/prius.urdf"/>
+  <arg name="ego_vehicle_name" default="prius"/>
+
+  <!-- Ego-vehicle initial pose -->
+  <arg name="init_pos_x" default="196.80"/>
+  <arg name="init_pos_y" default="104.95"/>
+  <arg name="init_pos_z" default="0.5"/>
+  <arg name="init_yaw" default="3.14159"/>
+
+  <arg name="use_gazebo" default="False"/>
+  <arg name="control_ego_vehicle" default="True"/>
+  <arg name="control_from_gazebo" default="False"/>
+  <arg name="route_file_name" default="icra.rou.xml"/>
+  <arg name="sumo_config_file_name" default="icra.sumocfg"/>
+
+  <arg name="scenario_nr" default="0"/>
+
+
+  <!-- Launch RVIZ ? -->
+
+  <arg name="launch_rviz" default="False"/>
+  <arg name="rvizconfig" default="$(find car_demo)/rviz/demo.rviz" />
+
+  <!-- Launch CMCDOT ? -->
+  <arg name="launch_cmcdot" default="False"/>
+  <!-- Launch CMCDOT Observations -->
+  <arg name="run_cmcdot_observations" default="False" />
+
+  ## Launch gazebo and world
+
+  <!-- We use the logic in empty_world.launch, changing only the name of the world to be launched
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(arg world_file)"/>
+    <arg name="gui" value="$(arg gz_gui)"/>
+
+  </include>
+-->
+
+ ## Spawn ego-vehicle (prius)
+  <!-- We use the logic in empty_world.launch, changing only the name of the world to be launched
+  <include file="$(find hybrid_simulation)/launchers/spawn_prius.launch">
+    <arg name="ego_vehicle_model" value="$(arg ego_vehicle_model)"/>
+    <arg name="ego_vehicle_name" value="$(arg ego_vehicle_name)"/>
+    <arg name="init_pos_x" value="$(arg init_pos_x)"/>
+    <arg name="init_pos_y" value="$(arg init_pos_y)"/>
+    <arg name="init_pos_z" value="$(arg init_pos_z)"/>
+    <arg name="init_yaw" value="$(arg init_yaw)"/>
+  </include>
+-->
+ ## Launch SUMO and interface
+  <!-- The interface launches the SUMO simulator, play button needs to be manually click -->
+  <include file="$(find hybrid_simulation)/launchers/sumo_interface.launch">
+      <arg name="ego_vehicle_name" value="$(arg ego_vehicle_name)"/>
+      <arg name="use_gazebo" value="$(arg use_gazebo)"/>
+      <arg name="control_ego_vehicle" value="$(arg control_ego_vehicle)"/>
+      <arg name="control_from_gazebo" value="$(arg control_from_gazebo)"/>
+      <arg name="route_file_name" value="$(arg route_file_name)"/>
+      <arg name="sumo_config_file_name" value="$(arg sumo_config_file_name)"/>
+      <arg name="scenario_nr" value="$(arg scenario_nr)"/>
+      <arg name="run_cmcdot_observations" value="$(arg run_cmcdot_observations)"/>
+  </include>
+
+
+  ## Launch CMCDOT for prius
+   <group if="$(arg launch_cmcdot)">
+     <include file="$(find hybrid_simulation)/launchers/cmcdot_prius.launch">
+     </include>
+<!--
+     <node pkg="hybrid_simulation" type="get_cmcdot_observations.py" name="cmcdot_observations" output="screen">
+     </node>
+ -->
+   </group>
+
+  ## Launch rviz
+  <group if="$(arg launch_rviz)">
+	<node pkg="rviz" type="rviz" name="zoe_rviz" args="-d $(arg rvizconfig)"/>
+  </group>
+
+</launch>

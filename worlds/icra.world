@@ -1,0 +1,110 @@
+<?xml version="1.0" ?>
+<sdf version="1.5">
+  <world name="default">
+    <scene>
+      <grid>false</grid>
+    </scene>
+
+    <gui fullscreen='0'>
+      <camera name='user_camera'>
+        <view_controller>orbit</view_controller>
+        <projection_type>perspective</projection_type>
+        <track_visual>
+          <name>prius</name>
+          <static>true</static>
+          <xyz>39 15 6</xyz>
+          <!-- <xyz>40 0 20</xyz> -->
+          <rpy>0 0 0</rpy>
+        </track_visual>
+      </camera>
+    </gui>
+
+    <!-- A global light source -->
+    <include>
+      <uri>model://sun</uri>
+    </include>
+    <!-- Invisible ground plane -->
+    <model name="ground">
+      <link name="body">
+        <collision name="geom">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+            </plane>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>100</mu>
+                <mu2>50</mu2>
+              </ode>
+            </friction>
+          </surface>
+        </collision>
+      </link>
+      <static>true</static>
+    </model>
+    <include>
+      <uri>model://grass_plane</uri>
+    </include>
+    <road name="EM0">
+      <width>6.6</width>
+      <point>150 103.3 0</point>
+      <point>70 103.3 0</point>
+    </road>
+    <road name="EM1">
+      <width>9.9</width>
+      <point>75 104.95 0</point>
+      <point>30 104.95 0</point>
+    </road>
+    <road name="EM2">
+      <width>6.6</width>
+      <point>30 103.3 0</point>
+      <point>-50 103.3 0</point>
+    </road>
+    <road name="EM3">
+      <width>3.3</width>
+      <point>-50 101.65 0</point>
+      <point>-100 101.65 0</point>
+    </road>
+    <road name="EM4">
+      <width>6.6</width>
+      <point>-100 103.3 0</point>
+      <point>-150 103.3 0</point>
+    </road>
+     <road name="EM5">
+      <width>9.9</width>
+      <point>-150 104.95 0</point>
+      <point>-205 104.95 0</point>
+    </road>
+    <road name="EM6">
+      <width>6.6</width>
+      <point>-200 103.3 0</point>
+      <point>-270 103.3 0</point>
+    </road>
+    <road name="EI0">
+      <width>3.3</width>
+      <point>150 121.65 0</point>
+      <point>100 121.65 0</point>
+    </road>
+    <road name="EI1">
+      <width>3.3</width>
+      <point>100 121.65 0</point>
+      <point>75 108.25 0</point>
+    </road>
+    <road name="E00">
+      <width>3.3</width>
+      <point>-205 108.25 0</point>
+      <point>-220 121.65 0</point>
+    </road>
+    <road name="E01">
+      <width>3.3</width>
+      <point>-220 121.65 0</point>
+      <point>-270 121.65 0</point>
+    </road>
+    <plugin name="SumoUpdate" filename="libSumoWorldPlugin.so">
+        <ego_vehicle_model_name>prius</ego_vehicle_model_name>
+    </plugin>
+
+  </world>
+</sdf>
