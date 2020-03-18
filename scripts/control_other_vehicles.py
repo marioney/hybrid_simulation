@@ -169,7 +169,7 @@ def run(event):
                     gazebo_delete_veh(item_name)
             if delete_all_vehicles is True:
                 rospy.loginfo("Deleting all remaining vehicles")
-                for v_name, subs in traci.vehicle.getAllSubscriptionResults().items():
+                for v_name, subs in traci.vehicle.getSubscriptionResults().items():
                     gazebo_delete_veh(v_name)
                     # ros_node_comp.delete_model(v_name)
                 rospy.loginfo("Bye Bye !!")
