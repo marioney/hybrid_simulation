@@ -1,9 +1,10 @@
 <?xml version='1.0'?>
 <sdf version='1.6'>
   <model name="car">
+
     <static>true</static>
     <link name='base_link'>
-      <pose>0 -2.3 0 0 0 3.14159</pose>
+      <pose>0.0 1.1 0.0 0.0 0.0 3.141592654</pose>
       <visual name='visual'>
         <geometry>
           <mesh>
@@ -15,30 +16,18 @@
         <cast_shadows>1</cast_shadows>
       </visual>
       <collision name='collision'>
-        <pose>0 0.0 0.8 0 0 0</pose>
         <geometry>
-	  <mesh>
+          <mesh>
             <uri>model://hybrid_simulation/meshes/Car.dae</uri>
             <scale>1 1 1</scale>
           </mesh>
-<!-- 
-	  <box>
-            <size>2.0 4.6 1.6</size>
-          </box> 
--->
+          <!--
+          <box>
+          <size>2.0 4.6 1.6</size>
+          </box>
+         -->
         </geometry>
       </collision>
     </link>
-        <!--
-    <joint type="fixed" name="bumper_to_base">3,141592654
-        <origin rpy="0.0 0.0 -3.141592654" xyz="2.3 0.0 0.0"/>
-        <parent>front_bumper</parent>
-        <child>base_link</child>
-    </joint>
-
-    <plugin filename="libSumoPlugin.so" name="sumo_plugin">
-      <linkName>base_link</linkName>
-    </plugin>
-    -->
   </model>
 </sdf>
