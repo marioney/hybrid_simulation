@@ -7,6 +7,8 @@
   <!-- Path to ego-vehicle model -->
   <arg name="ego_vehicle_model" default="$(find prius_description)/urdf/prius.urdf"/>
   <arg name="ego_vehicle_name" default="prius"/>
+  <arg name="control_from_gazebo" default="True"/>
+  <arg name="use_joystick" default="False"/>
 
   <!-- Ego-vehicle initial pose -->
   <arg name="init_pos_x" default="225.80"/>
@@ -22,7 +24,7 @@
   <param name="robot_description" textfile="$(arg ego_vehicle_model)"/>
 
   <!-- Spawn ego-vehicle model -->
-  <node name="spawn_ego_vehicle_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf 
+  <node name="spawn_ego_vehicle_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf
 										-param robot_description
 										-x $(arg init_pos_x)
 										-y $(arg init_pos_y)
@@ -30,25 +32,35 @@
 										-Y $(arg init_yaw)
 										-model $(arg ego_vehicle_name)" />
 
+
   <!-- State publisher -->
   <node pkg="robot_state_publisher" type="robot_state_publisher" name="ego_vehicle_state_publisher" >
     <!-- <remap from="robot_description" to="different_robot_description" /> -->
     <!-- <remap from="joint_states" to="/prius/joint_states" /> -->
   </node>
-  <!-- Fake localization -->
-  <node pkg="fake_localization" type="fake_localization" name="fake_localization">
-    <!-- <remap from="base_pose_ground_truth" to="/prius/base_pose_ground_truth"/> -->
-  </node>
 
-  <node pkg="tf2_ros" type="static_transform_publisher" name="very_inaccurate_odom" args="0 0 0 0 0 0 odom base_link"/>
-
-  <!-- Joystick driver -->
-  <node pkg="joy" type="joy_node" name="joy_node0">
-    <param name="dev" value="/dev/input/js0"/>
-  </node>
- 
-  <!-- Joystick Translator --> 
-  <node pkg="car_demo" type="joystick_translator" name="joystick_translator"/>
+ ## Control from gazebo (get position form gazebo and send it to SUMO)
+  <group if="$(arg control_from_gazebo)">
+    <!-- Fake localization -->
+    <node pkg="fake_localization" type="fake_localization" name="fake_localization">
+      <!-- <remap from="base_pose_ground_truth" to="/prius/base_pose_ground_truth"/> -->
+    </node>
+    <node pkg="tf2_ros" type="static_transform_publisher" name="very_inaccurate_odom" args="0 0 0 0 0 0 odom base_link"/>
+    <group if="$(arg use_joystick)">
+      <!-- Joystick driver -->
+      <node pkg="joy" type="joy_node" name="joy_node0">
+        <param name="dev" value="/dev/input/js0"/>
+      </node>
+      <!-- Joystick Translator -->
+      <node pkg="car_demo" type="joystick_translator" name="joystick_translator"/>
+    </group>
+  </group>
+  ## Control from gazebo Set position and speed from SUMO to gazebo
+  ## Uses /world to /prius transformation sent by SUMO interface
+  <group unless="$(arg control_from_gazebo)">
+    <!-- static_transform_publisher x y z yaw pitch roll frame_id child_frame_id period_in_ms -->
+    <node pkg="tf2_ros" type="static_transform_publisher" name="prius_to_baselink" args="0 -3.750 0 1.57079 0 0 prius base_link"/>
+  </group>
 
 
 </launch>
