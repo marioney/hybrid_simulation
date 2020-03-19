@@ -34,7 +34,7 @@ def generate_route_file(route_file_path, max_steps, p_we, p_ew, p_ns):
         #         <route id="route03" edges="EM5 EO0 EO1"/> """, file=routes)
 
         print("""<routes>
-        
+
         <vType accel="2.0" decel="6.0" id="Car1" length="5.0" minGap="3.5" maxSpeed="5.0" sigma="0.9"
         lcStrategic="0.0" lcSpeedGain="0.009" lcKeepRight="0.001" />
         <vType accel="2.0" decel="6.0" id="ego-vehicle" length="5.0" minGap="3.5" maxSpeed="5.0" sigma="0.9"
@@ -113,7 +113,7 @@ def generate_route_file_dmaking(route_file_path, n_scenario):
         lcStrategic="0.0" lcSpeedGain="0.9" lcKeepRight="0.01" />
         <vType accel="1.0" decel="6.0" id="Car_50" length="5.0" minGap="2.5" maxSpeed="5.0" sigma="0.9"
         lcStrategic="0.0" lcSpeedGain="0.9" lcKeepRight="0.01" />
-        <vType accel="1.0" decel="6.0" id="ego-vehicle" length="4.1" minGap="2.0" maxSpeed="13.0" sigma="0.9"
+        <vType accel="1.0" decel="6.0" id="ego-vehicle" length="5.0" minGap="2.5" maxSpeed="13.0" sigma="0.9"
         lcStrategic="0.0" lcSpeedGain="0.9" lcKeepRight="100.01"/>
         <route id="route01" edges="D8 L8 L9 L11 L1 D1"/>
         <route id="route02" edges="L8 L9 L11 L1 D1"/>
@@ -231,5 +231,3 @@ def generate_route_file_dmaking(route_file_path, n_scenario):
                   ' departLane="1" departSpeed="max" />', file=routes)
 
         print("</routes>", file=routes)
-
-
