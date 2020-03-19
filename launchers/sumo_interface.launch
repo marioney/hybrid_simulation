@@ -16,22 +16,21 @@
  ## Launch SUMO and interface
   <!-- The interface launches the SUMO simulator, play button needs to be manually click -->
   <node pkg="hybrid_simulation" type="control_other_vehicles.py" name="sumo_interface" output="screen" respawn="True" respawn_delay="15">
-     <param name="use_gazebo" value="$(arg use_gazebo)" />
-	 <param name="control_ego_vehicle" value="$(arg control_ego_vehicle)" />
-	 <param name="control_from_gazebo" value="$(arg control_from_gazebo)" />
-	 <param name="route_file_name" value="$(arg route_file_name)" />
-	 <param name="sumo_config_file_name" value="$(arg sumo_config_file_name)" />
- 	 <param name="ego_vehicle_name" value="$(arg ego_vehicle_name)" />
- 	 <param name="n_scenario" value="$(arg scenario_nr)" />
+    <param name="use_gazebo" value="$(arg use_gazebo)" />
+    <param name="control_ego_vehicle" value="$(arg control_ego_vehicle)" />
+    <param name="control_from_gazebo" value="$(arg control_from_gazebo)" />
+    <param name="route_file_name" value="$(arg route_file_name)" />
+    <param name="sumo_config_file_name" value="$(arg sumo_config_file_name)" />
+    <param name="ego_vehicle_name" value="$(arg ego_vehicle_name)" />
+    <param name="n_scenario" value="$(arg scenario_nr)" />
   </node>
 
-   ## Launch Observations from cmcdot
-  <!-- The interface launches the SUMO simulator, play button needs to be manually click -->
+  ## Launch Observations from cmcdot
   <node if="$(arg run_cmcdot_observations)" pkg="hybrid_simulation" type="get_cmcdot_observations.py" name="cmcdot_observations" output="screen">
- 	 <param name="ego_vehicle_name" value="$(arg ego_vehicle_name)" />
+    <param name="ego_vehicle_name" value="$(arg ego_vehicle_name)" />
   </node>
+
   ## Launch Control control_ego_vehicle
-  <!-- The interface launches the SUMO simulator, play button needs to be manually click -->
   <node if="$(arg run_control_ego_vehicle)" pkg="control_ego_vehicle" type="control_ego_node.py" name="control_ego_vehicle_node" output="screen">
  	 <param name="ego_vehicle_name" value="$(arg ego_vehicle_name)" />
   </node>
