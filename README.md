@@ -40,7 +40,7 @@ The code compiles only using *catkin_make*.
 * cd to catkin workspace
 
    ```console
-      cd [your-catkin-workspace
+      cd [your-catkin-workspace]
       catkin_make hybrid_simulation
    ```
 
@@ -83,50 +83,56 @@ It is suggested to run the launch files than to run the bin files
 
 ## Brief explanation of the package contents
 
-### src / sumo_world_plugin.cpp
+### Main source files
+
+#### src / sumo_world_plugin.cpp
 
 Source code for the Gazebo plugin
 
-### scripts / control_other_vehicles.py
+#### scripts / control_other_vehicles.py
 
 Main source for the SUMO control interface
 
-### src / hybrid_simulation / ego_vehicle.py
+#### src / hybrid_simulation / ego_vehicle.py
 
 Source code for the EgoVehicle class: sets the status of ego-vehicle in SUMO with the values from Gazebo
 
-### src / hybrid_simulation / route_file.py
+#### src / hybrid_simulation / route_file.py
 
 Source code for the generation of the SUMO route file *network_traci.rou.xml*
 
-### src / hybrid_simulation / traci_controls.py
+#### src / hybrid_simulation / traci_controls.py
 
 Source code for auxiliary classes to control and interface with the simulation.
 
-### sumo_files / network.sumocfg
+### SUMO config files
+
+#### sumo_files / network.sumocfg
 
 Simulation and overall configuration file for the SUMO simulation.
 
-### sumo_files / network.net.xmlt  
+#### sumo_files / network.net.xmlt  
 
 Description of the scenario, roads, intersections and other elements. It was created using the NETEDIT tool included in the SUMO installation.
 
-### sumo_files / network.det.xml
+#### sumo_files / network.det.xml
 
 Definition of a detector to control an intelligent traffic light.
 
-### launchers
+### Launchers
 
 Different launchers detailed above.
 
-### meshes / Car.dae
+### Models / meshes
+
+#### meshes / Car.dae
 
 Mesh file for the car model used for all additional vehicles.
 
-### sdf / models /car / car_model.sdf
+#### sdf / models /car / car_model.sdf
 
 SDF file for the car model used for all additional vehicles.
 
-### worlds / roads.world
+#### worlds / roads.world
 
 World file, with the scenario and Roads description for Gazebo. Includes the SumoWorldPlugin.
